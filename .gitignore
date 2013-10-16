@@ -4,3 +4,12 @@
 *.jar
 *.war
 *.ear
+
+# emacs backups #
+*~
+
+# Maven Build folder #
+target/
+
+# Netbeans Config File #
+nb-configuration.xml

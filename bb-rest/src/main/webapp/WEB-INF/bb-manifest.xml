@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns='http://www.blackboard.com/bb-manifest'>
+    <plugin>
+        <name value="BbRest"/>
+        <handle value="bbrest"/>
+        <version value="1.0.0"/>
+        <vendor>
+            <id value="gray"/>
+            <name value="Paul Gray"/>
+            <url value="http://paulgray.aws.af.cm"/>
+        </vendor>
+        <requires>
+            <bbversion value="9.1"/>
+        </requires>
+        <http-actions>
+            <config value="config"/>
+        </http-actions>
+        <application-defs>
+            <application handle="bbrest-manager" name="BbRest Configuration" type="system">
+                <links>
+                    <link>
+                        <name value="BbRest Configuration"/>
+                        <url value="config"/>
+                        <type value="system_tool"/>
+                    </link>
+                </links>
+            </application>
+        </application-defs>
+        <permissions>
+            <permission type="java.io.FilePermission" name="/usr/local/blackboard/content/vi/bb_bb60/plugins/gray-lmsrest/config/-" actions="read,write,delete" />
+            <permission type="java.io.FilePermission" name="/usr/local/blackboard/logs/-" actions="write" />
+            <permission type="java.io.FilePermission" name="/usr/local/blackboard/apps/tomcat/temp/-" actions="read,write,delete" />
+            <permission type="java.security.SecurityPermission" name="*" />
+            <permission type="java.lang.RuntimePermission" name="*" />
+            <permission type="java.net.SocketPermission" name="*" actions="connect,resolve" />
+            <permission type="java.lang.reflect.ReflectPermission" name="suppressAccessChecks" />
+            <permission type="java.util.PropertyPermission" name="*" actions="read,write" />
+            <permission type="blackboard.data.AttributePermission" name="user.personalinfo" actions="get" />
+            <permission type="blackboard.data.AttributePermission" name="user.authinfo" actions="get" />
+            <permission type="java.lang.RuntimePermission" name="createClassLoader" />
+            <permission type="java.lang.RuntimePermission" name="setContextClassLoader" />
+            <permission type="java.lang.RuntimePermission" name="getProtectionDomain" />
+            
+            <permission type="blackboard.persist.PersistPermission" name="message" actions="create,modify"/>
+            
+        </permissions>
+    </plugin>
+</manifest>

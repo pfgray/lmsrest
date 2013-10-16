@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+                        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+    <security:http auto-config="true" entry-point-ref="preAuthenticatedProcessingFilterEntryPoint">
+        <security:session-management session-fixation-protection="none" />
+        <security:custom-filter after="PRE_AUTH_FILTER" ref="blackboardPreAuthenticatedProcessingFilter"/>
+        <security:anonymous/>
+    </security:http>
+    
+    <security:authentication-manager alias="authenticationManager">
+        <security:authentication-provider ref="preAuthenticatedAuthenticationProvider"/>
+    </security:authentication-manager>
+
+
+    <bean id="preAuthenticatedAuthenticationProvider" class="gray.paul.bbrest.security.BlackboardPreAuthenticatedAuthenticationProvider">
+        <property name="preAuthenticatedUserDetailsService" ref="preAuthenticatedUserDetailsService"/>
+    </bean>
+
+    <bean id="preAuthenticatedUserDetailsService" class="org.springframework.security.web.authentication.preauth.PreAuthenticatedGrantedAuthoritiesUserDetailsService"/>
+
+    <bean id="blackboardPreAuthenticatedProcessingFilter" class="gray.paul.bbrest.security.BlackboardPreAuthenticationFilter">
+        <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="authenticationDetailsSource">
+            <bean class="org.springframework.security.web.authentication.preauth.j2ee.J2eeBasedPreAuthenticatedWebAuthenticationDetailsSource">
+                <property name="mappableRolesRetriever">
+                    <bean class="org.springframework.security.web.authentication.preauth.j2ee.WebXmlMappableAttributesRetriever" />
+                </property>
+                <property name="userRoles2GrantedAuthoritiesMapper">
+                    <bean class="org.springframework.security.core.authority.mapping.SimpleAttributes2GrantedAuthoritiesMapper">
+                        <property name="convertAttributeToUpperCase" value="true"/>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="preAuthenticatedProcessingFilterEntryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint"/>
+
+    <bean id="servletContext" class="org.springframework.web.context.support.ServletContextFactoryBean"/>
+<!--
+    <bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
+        <property name="allowIfAllAbstainDecisions" value="false"/>
+        <property name="decisionVoters">
+            <list>
+                <bean class="org.springframework.security.access.vote.RoleVoter" />
+                <bean class="org.springframework.security.access.vote.AuthenticatedVoter" />
+            </list>
+        </property>
+    </bean>
+    
+    -->
+</beans>
