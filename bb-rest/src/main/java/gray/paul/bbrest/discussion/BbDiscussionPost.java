@@ -33,8 +33,8 @@ public class BbDiscussionPost extends DiscussionPost {
         if (message.getUserId() != null) {
             this.userId = message.getUserId().getExternalString();
         }
-        if (message.getThreadId() != null) {
-            this.threadId = message.getThreadId().getExternalString();
+        if (message.getParentId() != null) {
+            this.threadId = message.getParentId().getExternalString();
         }
         for (Message response : message.getResponses()) {
             this.replies.add(new BbDiscussionPost(response));

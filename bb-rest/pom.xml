@@ -79,6 +79,13 @@
         </dependency>
     </dependencies>
 
+  <repositories>
+    <repository>
+      <id>apache</id>
+      <url>https://bbprepo.blackboard.com/content/repositories/releases/</url>
+    </repository>
+  </repositories>
+
     <build>
         <plugins>
             <plugin>

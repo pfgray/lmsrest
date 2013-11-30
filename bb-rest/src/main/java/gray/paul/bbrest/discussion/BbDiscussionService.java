@@ -166,7 +166,7 @@ public class BbDiscussionService implements DiscussionService {
             Message thread = messageDbLoader.loadById(BlackboardUtilities.getIdFromPk(discussionThread.getId(), blackboard.data.discussionboard.Message.class));
             MessageDbPersister messageDbPersister = MessageDbPersister.Default.getInstance();
             Message msg = BbDiscussionPost.toMessage(discussionPost, user.getId());
-            msg.setThreadId(thread.getId());
+            msg.setParentId(thread.getId());
             msg.setForumId(BlackboardUtilities.getIdFromPk(discussionThread.getForumId(), blackboard.data.discussionboard.Forum.class));
             msg.setUserId(BlackboardUtilities.getIdFromPk(user.getId(), blackboard.data.user.User.class));
             msg.setPostDate(Calendar.getInstance());
