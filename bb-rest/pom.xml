@@ -30,14 +30,14 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>blackboard</groupId>
+            <groupId>blackboard.platform</groupId>
             <artifactId>bb-platform</artifactId>
             <version>9.1.110082.0</version>
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>blackboard.admin</groupId>
+            <groupId>blackboard.platform</groupId>
             <artifactId>bb-cms-admin</artifactId>
             <version>9.1.110082.0</version>
             <type>jar</type>
