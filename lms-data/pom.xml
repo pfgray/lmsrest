@@ -2,12 +2,20 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>gray.paul</groupId>
-  <artifactId>LmsData</artifactId>
+  <groupId>net.paulgray</groupId>
+  <artifactId>lms-data</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>LmsData</name>
+ <parent>
+     <groupId>net.paulgray</groupId>
+     <artifactId>lms-rest</artifactId>
+     <version>1.0.0-SNAPSHOT</version>
+     <relativePath>../pom.xml</relativePath>
+ </parent>
+
+
+  <name>lms-data</name>
   <url>http://maven.apache.org</url>
 
   <properties>

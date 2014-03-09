@@ -2,13 +2,22 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>gray.paul</groupId>
-    <artifactId>BbRest</artifactId>
+    <groupId>net.paulgray</groupId>
+    <artifactId>bb-rest</artifactId>
     <packaging>war</packaging>
     <version>1.0.0-SNAPSHOT</version>
 
-    <name>BbRest</name>
+    <name>bb-rest</name>
     <url>http://maven.apache.org</url>
+
+
+ <parent>
+     <groupId>net.paulgray</groupId>
+     <artifactId>lms-rest</artifactId>
+     <version>1.0.0-SNAPSHOT</version>
+     <relativePath>../pom.xml</relativePath>
+ </parent>
+
 
     <dependencies>
         <dependency>
@@ -24,8 +33,8 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>gray.paul</groupId>
-            <artifactId>LmsRest</artifactId>
+            <groupId>net.paulgray</groupId>
+            <artifactId>lms-api</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
