@@ -13,10 +13,7 @@ import net.paulgray.lmsrest.course.Course;
 public class BbCourse extends Course {
     
     public BbCourse(blackboard.data.course.Course course) {
-        this.id = course.getId().getExternalString();
-        this.courseId = course.getCourseId();
-        this.description = course.getDescription();
-        this.name = course.getTitle();
+        super(course.getId().getExternalString(), course.getCourseId(), course.getTitle(), course.getDescription());
     }
     
 }

@@ -15,9 +15,7 @@ import net.paulgray.lmsrest.announcement.Announcement;
 public class BbAnnouncement extends Announcement{
     
     public BbAnnouncement(blackboard.data.announcement.Announcement a){
-        this.id = a.getId().getExternalString();
-        this.title = a.getTitle();
-        this.text = a.getBody().getText();
+        super(a.getId().getExternalString(), a.getBody().getText(), a.getTitle(), null);
     }
     
 }

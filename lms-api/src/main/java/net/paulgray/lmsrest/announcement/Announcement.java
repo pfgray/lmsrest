@@ -16,6 +16,16 @@ public class Announcement {
     protected String text;
     protected String title;
     protected Date created;
+
+    public Announcement() {
+    }
+
+    public Announcement(String id, String text, String title, Date created) {
+        this.id = id;
+        this.text = text;
+        this.title = title;
+        this.created = created;
+    }
     
     public String getId() {
         return id;

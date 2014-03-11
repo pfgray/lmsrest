@@ -23,6 +23,22 @@ public class User {
     protected String email;
     protected String locale;
 
+    public User() {
+    }
+
+    public User(String id, String username, String firstName, String lastName, String mi, Date lastLogin, Date birthDate, String systemRole, String email, String locale) {
+        this.id = id;
+        this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.mi = mi;
+        this.lastLogin = lastLogin;
+        this.birthDate = birthDate;
+        this.systemRole = systemRole;
+        this.email = email;
+        this.locale = locale;
+    }
+
     public String getId() {
         return id;
     }

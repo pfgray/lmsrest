@@ -18,6 +18,7 @@ import net.paulgray.lmsrest.enrollment.Enrollment;
 public class BbEnrollment extends Enrollment {
     
     public BbEnrollment(blackboard.admin.data.course.Enrollment enrollment){
+        super();
         if (enrollment.getCourseId() != null) {
             this.courseId = enrollment.getCourseId().toExternalString();
         }

@@ -19,6 +19,18 @@ public class Enrollment {
     protected String userId;
     protected String role;
 
+    public Enrollment() {
+    }
+
+    public Enrollment(Date enrollmentDate, String id, String status, String courseId, String userId, String role) {
+        this.enrollmentDate = enrollmentDate;
+        this.id = id;
+        this.status = status;
+        this.courseId = courseId;
+        this.userId = userId;
+        this.role = role;
+    }
+
     public Date getEnrollmentDate() {
         return enrollmentDate;
     }

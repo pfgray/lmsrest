@@ -15,6 +15,16 @@ public class Course {
     protected String name;
     protected String description;
 
+    public Course() {
+    }
+
+    public Course(String id, String courseId, String name, String description) {
+        this.id = id;
+        this.courseId = courseId;
+        this.name = name;
+        this.description = description;
+    }
+
     public String getId() {
         return id;
     }
