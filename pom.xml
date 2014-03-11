@@ -2,16 +2,15 @@
 
     <name>lms-rest</name>
 
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>net.paulgray</groupId>
-	<artifactId>lms-rest</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>net.paulgray</groupId>
+    <artifactId>lms-rest</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-	<modules>
-		<module>lms-data</module>
-		<module>lms-api</module>
-		<module>bb-rest</module>
-	</modules>
+    <modules>
+        <module>lms-api</module>
+        <module>bb-rest</module>
+    </modules>
 
 </project>
