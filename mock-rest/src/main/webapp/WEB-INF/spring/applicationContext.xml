@@ -21,6 +21,7 @@
     <bean class="net.paulgray.mockrest.MockUserService"/>
     <bean class="net.paulgray.mockrest.MockAnnouncementService"/>
     <bean class="net.paulgray.mockrest.MockDiscussionService"/>
+    <bean class="net.paulgray.mockrest.MockAssignmentService"/>
     
     <mvc:annotation-driven conversion-service="conversionService"/>
     
