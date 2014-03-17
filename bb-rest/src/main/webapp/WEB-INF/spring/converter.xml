@@ -13,10 +13,10 @@
     <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
         <property name="converters">
             <set>
-                <bean class="gray.paul.lmsrest.course.StringToCourseConverter"/>
-                <bean class="gray.paul.lmsrest.discussion.board.StringToDiscussionBoardConverter"/>
-                <bean class="gray.paul.lmsrest.discussion.thread.StringToDiscussionThreadConverter"/>
-                <bean class="gray.paul.lmsrest.discussion.post.StringToDiscussionPostConverter"/>
+                <bean class="net.paulgray.lmsrest.course.StringToCourseConverter"/>
+                <bean class="net.paulgray.lmsrest.discussion.board.StringToDiscussionBoardConverter"/>
+                <bean class="net.paulgray.lmsrest.discussion.thread.StringToDiscussionThreadConverter"/>
+                <bean class="net.paulgray.lmsrest.discussion.post.StringToDiscussionPostConverter"/>
             </set>
         </property>
     </bean>

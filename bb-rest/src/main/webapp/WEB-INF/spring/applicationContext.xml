@@ -17,11 +17,11 @@
     
     <context:annotation-config/>
   
-    <bean class="gray.paul.bbrest.course.BbCourseService"/>
-    <bean class="gray.paul.bbrest.enrollment.BbEnrollmentService"/>
-    <bean class="gray.paul.bbrest.user.BbUserService"/>
-    <bean class="gray.paul.bbrest.announcement.BbAnnouncementService"/>
-    <bean class="gray.paul.bbrest.discussion.BbDiscussionService"/>
+    <bean class="net.paulgray.bbrest.course.BbCourseService"/>
+    <bean class="net.paulgray.bbrest.enrollment.BbEnrollmentService"/>
+    <bean class="net.paulgray.bbrest.user.BbUserService"/>
+    <bean class="net.paulgray.bbrest.announcement.BbAnnouncementService"/>
+    <bean class="net.paulgray.bbrest.discussion.BbDiscussionService"/>
     
     <mvc:annotation-driven conversion-service="conversionService"/>
     

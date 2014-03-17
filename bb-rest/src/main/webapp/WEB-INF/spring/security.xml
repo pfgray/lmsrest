@@ -16,13 +16,13 @@
     </security:authentication-manager>
 
 
-    <bean id="preAuthenticatedAuthenticationProvider" class="gray.paul.bbrest.security.BlackboardPreAuthenticatedAuthenticationProvider">
+    <bean id="preAuthenticatedAuthenticationProvider" class="net.paulgray.bbrest.security.BlackboardPreAuthenticatedAuthenticationProvider">
         <property name="preAuthenticatedUserDetailsService" ref="preAuthenticatedUserDetailsService"/>
     </bean>
 
     <bean id="preAuthenticatedUserDetailsService" class="org.springframework.security.web.authentication.preauth.PreAuthenticatedGrantedAuthoritiesUserDetailsService"/>
 
-    <bean id="blackboardPreAuthenticatedProcessingFilter" class="gray.paul.bbrest.security.BlackboardPreAuthenticationFilter">
+    <bean id="blackboardPreAuthenticatedProcessingFilter" class="net.paulgray.bbrest.security.BlackboardPreAuthenticationFilter">
         <property name="authenticationManager" ref="authenticationManager"/>
         <property name="authenticationDetailsSource">
             <bean class="org.springframework.security.web.authentication.preauth.j2ee.J2eeBasedPreAuthenticatedWebAuthenticationDetailsSource">

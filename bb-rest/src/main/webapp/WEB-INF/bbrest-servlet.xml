@@ -18,7 +18,7 @@
     
     <mvc:annotation-driven conversion-service="conversionService">
         <mvc:argument-resolvers>
-            <bean class="gray.paul.lmsrest.web.ContextUserArgumentResolver"/>
+            <bean class="net.paulgray.lmsrest.web.ContextUserArgumentResolver"/>
         </mvc:argument-resolvers>
         <mvc:message-converters>
             <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"/>
@@ -26,11 +26,11 @@
     </mvc:annotation-driven>
    
     <!--these are our controllers-->
-    <context:component-scan base-package="gray.paul.lmsrest.user" />
-    <context:component-scan base-package="gray.paul.lmsrest.course" />
-    <context:component-scan base-package="gray.paul.lmsrest.enrollment" />
-    <context:component-scan base-package="gray.paul.lmsrest.announcement" />
-    <context:component-scan base-package="gray.paul.lmsrest.discussion" />
+    <context:component-scan base-package="net.paulgray.lmsrest.user" />
+    <context:component-scan base-package="net.paulgray.lmsrest.course" />
+    <context:component-scan base-package="net.paulgray.lmsrest.enrollment" />
+    <context:component-scan base-package="net.paulgray.lmsrest.announcement" />
+    <context:component-scan base-package="net.paulgray.lmsrest.discussion" />
     
     <!--
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
