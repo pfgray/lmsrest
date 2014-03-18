@@ -11,12 +11,12 @@
     <url>http://maven.apache.org</url>
 
 
- <parent>
-     <groupId>net.paulgray</groupId>
-     <artifactId>lms-rest</artifactId>
-     <version>1.0.0-SNAPSHOT</version>
-     <relativePath>../pom.xml</relativePath>
- </parent>
+    <parent>
+        <groupId>net.paulgray</groupId>
+        <artifactId>lms-rest</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
 
     <dependencies>
@@ -86,14 +86,19 @@
             <artifactId>spring-security-config</artifactId>
             <version>3.1.4.RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.7.2</version>
+        </dependency>
     </dependencies>
 
-  <repositories>
-    <repository>
-      <id>apache</id>
-      <url>https://bbprepo.blackboard.com/content/repositories/releases/</url>
-    </repository>
-  </repositories>
+    <repositories>
+        <repository>
+            <id>apache</id>
+            <url>https://bbprepo.blackboard.com/content/repositories/releases/</url>
+        </repository>
+    </repositories>
 
     <build>
         <plugins>

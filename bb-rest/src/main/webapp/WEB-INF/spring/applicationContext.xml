@@ -22,6 +22,7 @@
     <bean class="net.paulgray.bbrest.user.BbUserService"/>
     <bean class="net.paulgray.bbrest.announcement.BbAnnouncementService"/>
     <bean class="net.paulgray.bbrest.discussion.BbDiscussionService"/>
+    <bean class="net.paulgray.bbrest.assignment.BbAssignmentService"/>
     
     <mvc:annotation-driven conversion-service="conversionService"/>
     
