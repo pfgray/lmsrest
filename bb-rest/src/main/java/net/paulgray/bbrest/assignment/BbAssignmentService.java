@@ -10,6 +10,7 @@ import blackboard.data.gradebook.impl.OutcomeDefinition;
 import blackboard.persist.Id;
 import blackboard.persist.PersistenceException;
 import blackboard.persist.content.ContentDbLoader;
+import blackboard.persist.course.CourseDbLoader;
 import blackboard.persist.gradebook.impl.OutcomeDefinitionDbLoader;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,14 +48,17 @@ public class BbAssignmentService implements AssignmentService {
             OutcomeDefinitionDbLoader outcomeDefinitionDbLoader = OutcomeDefinitionDbLoader.Default.getInstance();
             List<OutcomeDefinition> outcomeDefinitions = outcomeDefinitionDbLoader.loadByCourseId(BlackboardUtilities.getIdFromPk(course.getId(), blackboard.data.course.Course.class));
             
+            
+            List<Content> contents = contentDbLoader.loadByCourseIdAndTitle(Id.UNSET_ID, null);
+            
+            for(Content c : contents){
+                assignments.add(new BbAssignment(c, course));
+            }
+            
             for(OutcomeDefinition od : outcomeDefinitions){
                 
                 if(od != null && !od.isTotal() && !od.isWeightedTotal() && od.isVisible()){
-                    Content content = null;
-                    if(od.getContentId() != null){
-                        content = contentDbLoader.loadByIdAndAvailability(BlackboardUtilities.getIdFromPk(course.getId(), Content.class));
-                    }
-                    assignments.add(new BbAssignment(od, course, content));
+                    assignments.add(new BbAssignment(od, course));
                 }
             }
             
