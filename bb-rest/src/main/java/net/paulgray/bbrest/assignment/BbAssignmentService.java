@@ -10,8 +10,8 @@ import blackboard.data.gradebook.impl.OutcomeDefinition;
 import blackboard.persist.Id;
 import blackboard.persist.PersistenceException;
 import blackboard.persist.content.ContentDbLoader;
-import blackboard.persist.course.CourseDbLoader;
 import blackboard.persist.gradebook.impl.OutcomeDefinitionDbLoader;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import net.paulgray.bbrest.BlackboardUtilities;
@@ -28,16 +28,16 @@ import org.springframework.stereotype.Service;
  * @author paul
  */
 @Service
-public class BbAssignmentService implements AssignmentService {
+public class BbAssignmentService implements AssignmentService<OutcomeDefinition> {
     
     @Autowired
     BbCourseService bbCourseService;
 
-    public List<Assignment> getAssignments(User user) {
+    public List<OutcomeDefinition> getAssignments(User user) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public List<Assignment> getAssignments(User user, Course course) {
+    public List<OutcomeDefinition> getAssignments(User user, Course course) {
         try {
             List<Assignment> assignments = new LinkedList<Assignment>();
 //            LineitemDbLoader lineItemDbLoader = LineitemDbLoader.Default.getInstance();
@@ -49,6 +49,7 @@ public class BbAssignmentService implements AssignmentService {
             List<OutcomeDefinition> outcomeDefinitions = outcomeDefinitionDbLoader.loadByCourseId(BlackboardUtilities.getIdFromPk(course.getId(), blackboard.data.course.Course.class));
             
             
+            
             List<Content> contents = contentDbLoader.loadByCourseIdAndTitle(Id.UNSET_ID, null);
             
             for(Content c : contents){
@@ -56,19 +57,19 @@ public class BbAssignmentService implements AssignmentService {
             }
             
             for(OutcomeDefinition od : outcomeDefinitions){
-                
+                od.getHideAttempt();
                 if(od != null && !od.isTotal() && !od.isWeightedTotal() && od.isVisible()){
                     assignments.add(new BbAssignment(od, course));
                 }
             }
-            
-            return assignments;
+            List<OutcomeDefinition> ods = new ArrayList<OutcomeDefinition>(outcomeDefinitions);
+            return outcomeDefinitions;
         } catch (PersistenceException ex) {
             return null;
         }
     }
 
-    public Assignment getAssignment(String id) {
+    public OutcomeDefinition getAssignment(String id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

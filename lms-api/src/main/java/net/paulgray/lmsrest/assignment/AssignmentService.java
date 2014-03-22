@@ -14,12 +14,12 @@ import net.paulgray.lmsrest.user.User;
  *
  * @author paul
  */
-public interface AssignmentService {
+public interface AssignmentService<T> {
     
-    public List<Assignment> getAssignments(User user);
+    public List<T> getAssignments(User user);
     
-    public List<Assignment> getAssignments(User user, Course course);
+    public List<T> getAssignments(User user, Course course);
     
-    public Assignment getAssignment(String id);
+    public T getAssignment(String id);
     
 }

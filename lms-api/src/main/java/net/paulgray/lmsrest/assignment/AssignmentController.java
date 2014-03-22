@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @author pfgray
  */
 @Controller
-public class AssignmentController {
+public class AssignmentController<T> {
 
     public static final String PATH = "assignments";
     @Autowired
@@ -30,13 +30,13 @@ public class AssignmentController {
 
     @RequestMapping(produces = "application/json", value=AssignmentController.PATH, method = RequestMethod.GET)
     public ResponseEntity getAssignments(@ContextUser User user) {
-        List<Assignment> assignments = assignmentService.getAssignments(user);
+        List<T> assignments = assignmentService.getAssignments(user);
         return new ResponseEntity(assignments, HttpStatus.OK);
     }
     
     @RequestMapping(method = RequestMethod.GET, produces = "application/json", value = CourseController.PATH + "/{course}/" + AssignmentController.PATH)
     public ResponseEntity getAssignmentsForCourse(@ContextUser User user, @PathVariable Course course) {
-        List<Assignment> assignments = assignmentService.getAssignments(user, course);
+        List<T> assignments = assignmentService.getAssignments(user, course);
         return new ResponseEntity(assignments, HttpStatus.OK);
     }
 
