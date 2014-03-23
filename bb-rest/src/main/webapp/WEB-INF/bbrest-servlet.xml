@@ -21,10 +21,21 @@
             <bean class="net.paulgray.lmsrest.web.ContextUserArgumentResolver"/>
         </mvc:argument-resolvers>
         <mvc:message-converters>
-            <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"/>
+            <bean class="net.paulgray.bbrest.bb.MixinJacksonHttpMessageConverter">
+                <constructor-arg index="0">
+                <map>
+                    <entry>
+                        <key><value type="java.lang.Class">blackboard.data.gradebook.impl.OutcomeDefinition</value></key>
+                        <value type="java.lang.Class">net.paulgray.bbrest.assignment.OutcomeMixin</value>
+                    </entry>
+                </map>
+                </constructor-arg>
+            </bean>
         </mvc:message-converters>
     </mvc:annotation-driven>
-   
+    
+    <mvc:resources mapping="/static/**" location="/static/" />
+    
     <!--these are our controllers-->
     <context:component-scan base-package="net.paulgray.lmsrest.user" />
     <context:component-scan base-package="net.paulgray.lmsrest.course" />
@@ -32,6 +43,7 @@
     <context:component-scan base-package="net.paulgray.lmsrest.announcement" />
     <context:component-scan base-package="net.paulgray.lmsrest.discussion" />
     <context:component-scan base-package="net.paulgray.lmsrest.assignment" />
+    <context:component-scan base-package="net.paulgray.bbrest.web" />
     
     <!--
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>BbRest Configuration</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="vendor/angular/angular.min.js"></script>
+        <script src="js/bbrest.js"></script>
+        <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="css/bbrest.css"/>
+    </head>
+    <body ng-app="bbRest">
+        <div class="container">
+            <div ng-controller="ConfigController" class="row">
+                <div class="col-md-12 col-lg-8 col-lg-offset-2">
+                    <div class="bbRestInfo">
+                        <h1>{{info.app}}</h1><h3>{{info.version}}</h3>
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-6">
+                    <div class="jvmInfo">
+                        <h3>Java Vm</h3>
+                        <p>{{info.jvmInfo.vmVendor}} - {{info.jvmInfo.jreVersion}}</p>
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-6">
+                    <div class="jvmInfo">
+                        <h1>{{info.jvmInfo.vmVendor}}</h1>
+                        <h3>{{info.jvmInfo.jreVersion}}</h3>
+                    </div>
+                </div>
+                <!-- {{info}} -->
+            </div>
+        </div>
+    </body>
+</html>

@@ -7,20 +7,20 @@
         <vendor>
             <id value="gray"/>
             <name value="Paul Gray"/>
-            <url value="http://paulgray.aws.af.cm"/>
+            <url value="http://www.paulgray.net"/>
         </vendor>
         <requires>
             <bbversion value="9.1"/>
         </requires>
         <http-actions>
-            <config value="config"/>
+            <config value="static/config.html"/>
         </http-actions>
         <application-defs>
             <application handle="bbrest-manager" name="BbRest Configuration" type="system">
                 <links>
                     <link>
                         <name value="BbRest Configuration"/>
-                        <url value="config"/>
+                        <url value="static/config.html"/>
                         <type value="system_tool"/>
                     </link>
                 </links>
