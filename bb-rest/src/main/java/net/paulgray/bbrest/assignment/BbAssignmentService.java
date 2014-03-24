@@ -9,6 +9,7 @@ import blackboard.data.content.Content;
 import blackboard.data.gradebook.impl.OutcomeDefinition;
 import blackboard.persist.Id;
 import blackboard.persist.PersistenceException;
+import blackboard.persist.PkId;
 import blackboard.persist.content.ContentDbLoader;
 import blackboard.persist.gradebook.impl.OutcomeDefinitionDbLoader;
 import java.util.ArrayList;
@@ -57,7 +58,6 @@ public class BbAssignmentService implements AssignmentService<OutcomeDefinition>
             }
             
             for(OutcomeDefinition od : outcomeDefinitions){
-                od.getHideAttempt();
                 if(od != null && !od.isTotal() && !od.isWeightedTotal() && od.isVisible()){
                     assignments.add(new BbAssignment(od, course));
                 }

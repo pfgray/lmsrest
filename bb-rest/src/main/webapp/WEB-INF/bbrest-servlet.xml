@@ -26,8 +26,13 @@
                 <map>
                     <entry>
                         <key><value type="java.lang.Class">blackboard.data.gradebook.impl.OutcomeDefinition</value></key>
-                        <value type="java.lang.Class">net.paulgray.bbrest.assignment.OutcomeMixin</value>
+                        <value type="java.lang.Class">net.paulgray.bbrest.mixins.OutcomeMixin</value>
                     </entry>
+                    <entry>
+                        <key><value type="java.lang.Class">blackboard.persist.PkId</value></key>
+                        <value type="java.lang.Class">net.paulgray.bbrest.mixins.PkIdMixin</value>
+                    </entry>
+                       
                 </map>
                 </constructor-arg>
             </bean>
