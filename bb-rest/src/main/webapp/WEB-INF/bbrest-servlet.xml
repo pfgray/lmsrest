@@ -21,19 +21,11 @@
             <bean class="net.paulgray.lmsrest.web.ContextUserArgumentResolver"/>
         </mvc:argument-resolvers>
         <mvc:message-converters>
-            <bean class="net.paulgray.bbrest.bb.MixinJacksonHttpMessageConverter">
+            <bean class="net.paulgray.bbrest.mixins.MixinJacksonHttpMessageConverter">
                 <constructor-arg index="0">
-                <map>
-                    <entry>
-                        <key><value type="java.lang.Class">blackboard.data.gradebook.impl.OutcomeDefinition</value></key>
-                        <value type="java.lang.Class">net.paulgray.bbrest.mixins.OutcomeMixin</value>
-                    </entry>
-                    <entry>
-                        <key><value type="java.lang.Class">blackboard.persist.PkId</value></key>
-                        <value type="java.lang.Class">net.paulgray.bbrest.mixins.PkIdMixin</value>
-                    </entry>
-                       
-                </map>
+                    <list>
+                        <value>net.paulgray.bbrest.mixins</value>
+                    </list>
                 </constructor-arg>
             </bean>
         </mvc:message-converters>

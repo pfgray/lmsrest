@@ -41,14 +41,14 @@
         <dependency>
             <groupId>blackboard.platform</groupId>
             <artifactId>bb-platform</artifactId>
-            <version>9.1.110082.0</version>
+            <version>9.1.90132.0</version>
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>blackboard.platform</groupId>
             <artifactId>bb-cms-admin</artifactId>
-            <version>9.1.110082.0</version>
+            <version>9.1.90132.0</version>
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
@@ -91,6 +91,12 @@
             <artifactId>jsoup</artifactId>
             <version>1.7.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.9-RC1</version>
+        </dependency>
+
     </dependencies>
 
     <repositories>
