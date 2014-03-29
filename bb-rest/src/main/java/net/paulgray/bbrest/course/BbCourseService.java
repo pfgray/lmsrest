@@ -4,7 +4,6 @@
  */
 package net.paulgray.bbrest.course;
 
-import blackboard.persist.DbLoaderFactory;
 import blackboard.persist.PersistenceException;
 import blackboard.persist.course.CourseDbLoader;
 import net.paulgray.bbrest.BlackboardUtilities;

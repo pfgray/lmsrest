@@ -40,6 +40,7 @@
     <context:component-scan base-package="net.paulgray.lmsrest.announcement" />
     <context:component-scan base-package="net.paulgray.lmsrest.discussion" />
     <context:component-scan base-package="net.paulgray.lmsrest.assignment" />
+    <context:component-scan base-package="net.paulgray.lmsrest.people" />
     <context:component-scan base-package="net.paulgray.bbrest.web" />
     
     <!--
