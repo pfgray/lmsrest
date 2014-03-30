@@ -39,7 +39,7 @@ public class BbCourseService implements CourseService {
             List<blackboard.data.course.Course> courses = courseDbLoader.loadByUserId(BlackboardUtilities.getIdFromPk(user.getId(), blackboard.data.user.User.class));
             List<Course> toReturn = new LinkedList<Course>();
             for(blackboard.data.course.Course course : courses){
-                toReturn.add(new BbCourse(course));
+                toReturn.add(new BbCourse(course, BlackboardUtilities.getIdFromPk(user.getId(), blackboard.data.user.User.class)));
             }
             return toReturn;
         } catch (PersistenceException ex) {

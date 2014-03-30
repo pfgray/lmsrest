@@ -46,7 +46,7 @@ public class CourseController {
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity getCourses(@ContextUser User user) {
         List<Course> courses = courseService.getCoursesForUser(user);
-        return new ResponseEntity<List<CourseResource>>(courseResourceAssembler.toResources(courses), HttpStatus.OK);
+        return new ResponseEntity(courses, HttpStatus.OK);
     }
 /*
     @RequestMapping(method = RequestMethod.GET, produces = "application/json", value = "/{course}/announcements")

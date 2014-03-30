@@ -9,6 +9,7 @@ import blackboard.data.ValidationException;
 import blackboard.data.discussionboard.Conference;
 import blackboard.data.discussionboard.Forum;
 import blackboard.data.discussionboard.Message;
+import blackboard.data.discussionboard.MessageCounts;
 import blackboard.persist.Id;
 import blackboard.persist.PersistenceException;
 import blackboard.persist.discussionboard.ConferenceDbLoader;
@@ -37,9 +38,6 @@ public class BbDiscussionService implements DiscussionService {
     public List<DiscussionBoard> getDiscussionBoardsForCourseAndUser(Course course, User user) {
         try {
             ForumDbLoader forumDbLoader = ForumDbLoader.Default.getInstance();
-//            List<Forum> forums = forumDbLoader.loadEnabledByCourseIdAndUserId(
-//                    BlackboardUtilities.getIdFromPk(course.getId(), blackboard.data.course.Course.class),
-//                    BlackboardUtilities.getIdFromPk(user.getId(), blackboard.data.user.User.class));
 
             ConferenceDbLoader conferenceDbLoader = ConferenceDbLoader.Default.getInstance();
             List<Conference> conferences = conferenceDbLoader.loadAllByCourseId(BlackboardUtilities.getIdFromPk(course.getId(), blackboard.data.course.Course.class));
@@ -48,7 +46,7 @@ public class BbDiscussionService implements DiscussionService {
             for (Conference conference : conferences) {
                 List<Forum> forums = forumDbLoader.loadByConferenceId(conference.getId());
                 for (Forum forum : forums) {
-                    discussionBoards.add(new BbDiscussionBoard(forum, conference.getCourseId().getExternalString()));
+                    discussionBoards.add(getBbDiscussionBoardForForum(course, forum, BlackboardUtilities.getIdFromPk(user.getId(), blackboard.data.user.User.class)));
                 }
             }
             return discussionBoards;
@@ -56,19 +54,6 @@ public class BbDiscussionService implements DiscussionService {
             Logger.getLogger(BbDiscussionService.class.getName()).log(Level.SEVERE, null, ex);
             return new LinkedList<DiscussionBoard>();
         }
-//        try {
-//            ForumDbLoader forumDbLoader = ForumDbLoader.Default.getInstance();
-//            ConferenceDbLoader conferenceDbLoader = ConferenceDbLoader.Default.getInstance();
-//            List<Conference> conferences = conferenceDbLoader.loadAllByCourseId(BlackboardUtilities.getIdFromPk(course.getId(), blackboard.data.course.Course.class));
-//            List<DiscussionBoard> discussionBoards = new LinkedList<DiscussionBoard>();
-//            for (Conference conference : conferences) {
-//                discussionBoards.add(new BbDiscussionBoard(conference));
-//            }
-//            return discussionBoards;
-//        } catch (PersistenceException ex) {
-//            Logger.getLogger(BbDiscussionService.class.getName()).log(Level.SEVERE, null, ex);
-//            return new LinkedList<DiscussionBoard>();
-//        }
     }
 
     public List<DiscussionThread> getDiscussionThreadsForBoard(DiscussionBoard board) {
@@ -109,11 +94,7 @@ public class BbDiscussionService implements DiscussionService {
             ConferenceDbLoader conferenceDbLoader = ConferenceDbLoader.Default.getInstance();
             Forum forum = forumDbLoader.loadById(BlackboardUtilities.getIdFromPk(id, blackboard.data.discussionboard.Forum.class));
             Id courseId = conferenceDbLoader.loadById(forum.getConferenceId()).getCourseId();
-            if (courseId != null) {
-                return new BbDiscussionBoard(forum, courseId.getExternalString());
-            } else {
-                return new BbDiscussionBoard(forum, null);
-            }
+            return getBbDiscussionBoardForForum(null, forum, null);
         } catch (PersistenceException ex) {
             Logger.getLogger(BbDiscussionService.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -188,16 +169,16 @@ public class BbDiscussionService implements DiscussionService {
             Message post = messageDbLoader.loadById(BlackboardUtilities.getIdFromPk(discussionPost.getId(), blackboard.data.discussionboard.Message.class));
             MessageDbPersister messageDbPersister = MessageDbPersister.Default.getInstance();
             Message reply = BbDiscussionPost.toMessage(discussionReply, user.getId());
-            
+
             BbList<Message> replies = post.getResponses();
-            if(replies == null){
+            if (replies == null) {
                 replies = new BbList<Message>();
             }
             reply.setUserId(BlackboardUtilities.getIdFromPk(user.getId(), blackboard.data.user.User.class));
             reply.setPostDate(Calendar.getInstance());
             replies.add(reply);
             post.setResponses(replies);
-            
+
             messageDbPersister.persist(post);
             return new BbDiscussionPost(reply);
         } catch (PersistenceException ex) {
@@ -208,78 +189,15 @@ public class BbDiscussionService implements DiscussionService {
             return null;
         }
     }
-    /*
-     public List<DiscussionThread> getDiscussionBoardsForThread(DiscussionBoard board) {
-     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-     }
 
-     public List<DiscussionPost> getDiscussionPostsForThread(DiscussionThread thread) {
-     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-     }
-    
-
-     public List<DiscussionPost> getPostsForDiscussionBoard(DiscussionBoard discussionBoard) {
-     List<DiscussionPost> toReturn = new LinkedList<DiscussionPost>();
-     try {
-            
-     MessageDbLoader messageDbLoader = MessageDbLoader.Default.getInstance();
-     List<Message> messages = messageDbLoader.loadAllByForumId(BlackboardUtilities.getIdFromPk(discussionBoard.getId(), Forum.class));
-     for(Message message : messages){
-     toReturn.add(new BbDiscussionBoardPost(message));
-     }
-     } catch (PersistenceException ex) {
-     Logger.getLogger(BbDiscussionService.class.getName()).log(Level.SEVERE, null, ex);
-     }
-     return toReturn;
-     }
-    
-     @Override
-     public List<DiscussionBoard> getDiscussionBoardsForCourse(Course course) {
-     //  \/ leaving this in here to see if we can get the conferences without the "real" id (from the Bb database)
-     //blackboard.data.course.Course bbCourse = bbCourseService.getCourseById(BbUtil.getIdFromPk1(course.getId(), blackboard.data.course.Course.class));
-
-     List<Forum> forums = new LinkedList<Forum>();
-     try {
-     ConferenceDbLoader conferenceDbLoader = ConferenceDbLoader.Default.getInstance();
-     List<Conference> conferences = conferenceDbLoader.loadAllByCourseId(BlackboardUtilities.getIdFromPk(course.getId(), blackboard.data.course.Course.class));
-            
-     ForumDbLoader forumDbLoader = ForumDbLoader.Default.getInstance();
-     for(Conference conference : conferences){
-     forums.addAll(forumDbLoader.loadByConferenceId(conference.getId()));
-     }
-     } catch (PersistenceException ex) {
-     Logger.getLogger(BbDiscussionService.class.getName()).log(Level.SEVERE, null, ex);
-     }
-     List<DiscussionBoard> toReturn = new LinkedList<DiscussionBoard>();
-     for(Forum forum : forums){
-     toReturn.add(new BbDiscussionBoard(forum));
-     }
-     return toReturn;
-     }
-
-     @Override
-     public List<DiscussionBoard> getDiscussionBoardsForCourseAndUser(Course course, User user) {
-     throw new UnsupportedOperationException("not supported yet!");
-     //        blackboard.data.course.Course bbCourse = bbCourseService.getCourseById(BbUtil.getIdFromPk1(course.getId(), blackboard.data.course.Course.class));
-     //        blackboard.data.user.User bbUser = bbUserService.getUserById(BbUtil.getIdFromPk1(user.getId(), blackboard.data.user.User.class));
-     //
-     //        List<Forum> forums = getForumsForCourseAndUser(bbCourse, bbUser);
-     //        List<DiscussionBoard> toReturn = new LinkedList<DiscussionBoard>();
-     //        for(Forum forum : forums){
-     //            toReturn.add(new BbDiscussionBoard(forum));
-     //        }
-     //        return toReturn;
-     }
-
-     private List<Forum> getForumsForCourseAndUser(blackboard.data.course.Course bbCourse, blackboard.data.user.User bbUser) {
-     throw new UnsupportedOperationException("not supported yet.");
-     //        try {
-     //            ForumDbLoader forumDbLoader = (ForumDbLoader) blackboardDbLoaderFactory.getDbLoader(ForumDbLoader.TYPE);
-     //            return forumDbLoader.loadEnabledByCourseIdAndUserId(bbCourse.getId(), bbUser.getId());
-     //        } catch (PersistenceException ex) {
-     //            Logger.getLogger(BbDiscussionService.class.getName()).log(Level.SEVERE, null, ex);
-     //            return new LinkedList<Forum>();
-     //        }
-     }
-     */
+    private static BbDiscussionBoard getBbDiscussionBoardForForum(Course course, Forum forum, Id userId) {
+        try {
+            MessageDbLoader messageDbLoader = MessageDbLoader.Default.getInstance();
+            MessageCounts mc = messageDbLoader.loadMessageCountsByForumId(forum.getId(), userId);
+            return new BbDiscussionBoard(forum, course, mc);
+        } catch (PersistenceException ex) {
+            Logger.getLogger(BbDiscussionBoard.class.getName()).log(Level.WARNING, "Could not get Message count for db forum: " + forum.getId().getExternalString(), ex);
+            return new BbDiscussionBoard(forum, course, null);
+        }
+    }
 }
