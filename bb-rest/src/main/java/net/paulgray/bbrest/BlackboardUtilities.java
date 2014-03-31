@@ -7,7 +7,6 @@ package net.paulgray.bbrest;
 import blackboard.persist.DataType;
 import blackboard.persist.Id;
 import blackboard.persist.PersistenceException;
-import blackboard.persist.PkId;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

@@ -6,20 +6,17 @@
 
 package net.paulgray.bbrest.assignment.builder;
 
-import blackboard.data.content.Link;
 import blackboard.data.discussionboard.Conference;
 import blackboard.data.discussionboard.Forum;
 import blackboard.data.gradebook.Lineitem;
 import blackboard.persist.Id;
 import blackboard.persist.PersistenceException;
-import blackboard.persist.content.LinkDbLoader;
 import blackboard.persist.discussionboard.ConferenceDbLoader;
 import blackboard.persist.discussionboard.ForumDbLoader;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.paulgray.bbrest.BlackboardUtilities;
 import net.paulgray.bbrest.assignment.BbAssignment;
 import net.paulgray.lmsrest.course.Course;
 
