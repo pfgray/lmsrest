@@ -5,7 +5,6 @@
 package net.paulgray.lmsrest.discussion.board;
 
 import net.paulgray.lmsrest.course.Course;
-import net.paulgray.lmsrest.discussion.post.DiscussionPostResourceAssembler;
 import net.paulgray.lmsrest.discussion.DiscussionService;
 import net.paulgray.lmsrest.discussion.DiscussionBoard;
 import net.paulgray.lmsrest.course.CourseService;
@@ -38,21 +37,17 @@ public class DiscussionBoardController {
     CourseService courseService;
     @Autowired
     DiscussionService discussionBoardService;
-    @Autowired
-    DiscussionBoardResourceAssembler discussionBoardResourceAssembler;
-    @Autowired
-    DiscussionPostResourceAssembler discussionBoardPostResourceAssembler;
 
     @RequestMapping(method = RequestMethod.GET, produces = "application/json", value = "/{course}/" + DiscussionBoardController.PATH)
     public ResponseEntity getDiscussionBoardsForCourse(@ContextUser User user, @PathVariable Course course) {
         List<DiscussionBoard> discussionBoards = discussionBoardService.getDiscussionBoardsForCourseAndUser(course, user);
-        return new ResponseEntity<List<DiscussionBoardResource>>(discussionBoardResourceAssembler.toResources(discussionBoards), HttpStatus.OK);
+        return new ResponseEntity(discussionBoards, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST, produces = "application/json", value = "/{course}/" + DiscussionBoardController.PATH)
     public ResponseEntity postDiscussionBoardForCourse(@ContextUser User user, @PathVariable Course course, @RequestBody DiscussionBoardResource discussionBoardResource) {
         List<DiscussionBoard> discussionBoards = discussionBoardService.getDiscussionBoardsForCourseAndUser(course, user);
-        return new ResponseEntity<List<DiscussionBoardResource>>(discussionBoardResourceAssembler.toResources(discussionBoards), HttpStatus.OK);
+        return new ResponseEntity(discussionBoards, HttpStatus.OK);
     }
 
 }

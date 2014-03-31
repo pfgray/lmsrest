@@ -4,9 +4,7 @@
  */
 package net.paulgray.lmsrest.course;
 
-import net.paulgray.lmsrest.announcement.AnnouncementResourceAssembler;
 import net.paulgray.lmsrest.announcement.AnnouncementService;
-import net.paulgray.lmsrest.discussion.board.DiscussionBoardResourceAssembler;
 import net.paulgray.lmsrest.discussion.DiscussionService;
 import net.paulgray.lmsrest.enrollment.EnrollmentResourceAssembler;
 import net.paulgray.lmsrest.enrollment.EnrollmentService;
@@ -44,15 +42,11 @@ public class CourseController {
     DiscussionService discussionBoardService;
     @Autowired
     AnnouncementService announcementService;
-    @Autowired
-    AnnouncementResourceAssembler announcementResourceAssembler;
-    @Autowired
-    DiscussionBoardResourceAssembler discussionBoardResourceAssembler;
 
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity getCourses(@ContextUser User user) {
         List<Course> courses = courseService.getCoursesForUser(user);
-        return new ResponseEntity<List<CourseResource>>(courseResourceAssembler.toResources(courses), HttpStatus.OK);
+        return new ResponseEntity(courses, HttpStatus.OK);
     }
 /*
     @RequestMapping(method = RequestMethod.GET, produces = "application/json", value = "/{course}/announcements")

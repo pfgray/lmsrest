@@ -5,6 +5,7 @@
 package net.paulgray.lmsrest.discussion;
 
 import java.util.Date;
+import net.paulgray.lmsrest.course.Course;
 
 /**
  *
@@ -19,7 +20,7 @@ public class DiscussionBoard {
     protected Boolean available;
     protected Date endDate;
     
-    protected String courseId;
+    protected Course course;
 
     public Boolean getAvailable() {
         return available;
@@ -77,12 +78,12 @@ public class DiscussionBoard {
         this.lastEdited = lastEdited;
     }
 
-    public String getCourseId() {
-        return courseId;
+    public Course getCourse() {
+        return course;
     }
 
-    public void setCourseId(String courseId) {
-        this.courseId = courseId;
+    public void setCourse(Course course) {
+        this.course = course;
     }
     
 }

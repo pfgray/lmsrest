@@ -32,19 +32,17 @@ public class DiscussionThreadController {
     public static final String PATH = "discussion_threads";
     @Autowired
     DiscussionService discussionService;
-    @Autowired
-    DiscussionThreadResourceAssembler discussionThreadResourceAssembler;
 
     @RequestMapping(method = RequestMethod.GET, value = "/{discussionBoard}/" + DiscussionThreadController.PATH)
     public ResponseEntity getThreadsForDiscussionBoard(@PathVariable DiscussionBoard discussionBoard) {
         List<DiscussionThread> threads = discussionService.getDiscussionThreadsForBoard(discussionBoard);
-        return new ResponseEntity<List<DiscussionThreadResource>>(discussionThreadResourceAssembler.toResources(threads), HttpStatus.OK);
+        return new ResponseEntity(threads, HttpStatus.OK);
     }
-
+/*
     @RequestMapping(method = RequestMethod.POST, value = "/{discussionBoard}/" + DiscussionThreadController.PATH, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity postPostForDiscussionThread(@ContextUser User user, @PathVariable DiscussionBoard discussionBoard, @RequestBody DiscussionThreadResource discussionThreadResource) {
-        DiscussionThread dt = discussionService.insertDiscussionThreadForDiscussionBoardAndUser(discussionBoard, discussionThreadResourceAssembler.toDiscussionThread(discussionThreadResource), user);
-        return new ResponseEntity<DiscussionThreadResource>(discussionThreadResourceAssembler.toResource(dt), HttpStatus.CREATED);
+    public ResponseEntity postPostForDiscussionThread(@ContextUser User user, @PathVariable DiscussionBoard discussionBoard, @RequestBody DiscussionThread discussionThread) {
+        DiscussionThread dt = discussionService.insertDiscussionThreadForDiscussionBoardAndUser(discussionBoard, discussionThread, user);
+        return new ResponseEntity(dt, HttpStatus.CREATED);
     }
-    
+  */  
 }
