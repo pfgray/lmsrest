@@ -43,11 +43,11 @@ public class DiscussionBoardController {
         List<DiscussionBoard> discussionBoards = discussionBoardService.getDiscussionBoardsForCourseAndUser(course, user);
         return new ResponseEntity(discussionBoards, HttpStatus.OK);
     }
-
+/*
     @RequestMapping(method = RequestMethod.POST, produces = "application/json", value = "/{course}/" + DiscussionBoardController.PATH)
     public ResponseEntity postDiscussionBoardForCourse(@ContextUser User user, @PathVariable Course course, @RequestBody DiscussionBoardResource discussionBoardResource) {
         List<DiscussionBoard> discussionBoards = discussionBoardService.getDiscussionBoardsForCourseAndUser(course, user);
         return new ResponseEntity(discussionBoards, HttpStatus.OK);
     }
-
+*/
 }
