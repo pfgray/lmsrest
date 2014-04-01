@@ -4,9 +4,8 @@
  */
 package net.paulgray.bbrest.discussion;
 
-import blackboard.base.FormattedText;
-import blackboard.data.discussionboard.Forum;
 import blackboard.data.discussionboard.Message;
+import blackboard.data.discussionboard.MessageCounts;
 import net.paulgray.lmsrest.discussion.DiscussionThread;
 
 /**
@@ -14,17 +13,15 @@ import net.paulgray.lmsrest.discussion.DiscussionThread;
  * @author pfgray
  */
 public class BbDiscussionThread extends DiscussionThread {
+    
+    public Integer unread_messages;
+    public Integer total_messages;
 
-    BbDiscussionThread(Message message) {
-        
-        message.getComparableName();
-        message.getEditDate();
-        message.getForumId();
-        message.getIsThreadLocked();
-        message.getPostDate();
-        message.getUserFamilyName();
-        message.getUserGivenName();
-        
+    BbDiscussionThread(Message message, MessageCounts counts) {
+        if(counts != null){
+            this.unread_messages = counts.getUnreadCount();
+            this.total_messages = counts.getTotalCount();
+        }
         
         if (message.getId() != null) {
             this.id = message.getId().getExternalString();
@@ -34,7 +31,7 @@ public class BbDiscussionThread extends DiscussionThread {
         }
         this.subject = message.getSubject();
     }
-    
+    /*
     public static Message toMessage(DiscussionThread thread, Forum forum){
         Message message = new Message();
         message.setBody(new FormattedText(thread.getText(), FormattedText.Type.PLAIN_TEXT));
@@ -42,4 +39,5 @@ public class BbDiscussionThread extends DiscussionThread {
         message.setForumId(forum.getId());
         return message;
     }
+    */
 }

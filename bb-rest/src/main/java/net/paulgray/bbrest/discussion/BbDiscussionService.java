@@ -26,22 +26,26 @@ import net.paulgray.lmsrest.user.User;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.paulgray.bbrest.user.BbUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
  * @author pfgray
  */
 public class BbDiscussionService implements DiscussionService {
+    
+    @Autowired
+    BbUserService bbUserService;
 
     public List<DiscussionBoard> getDiscussionBoardsForCourseAndUser(Course course, User user) {
         try {
             ForumDbLoader forumDbLoader = ForumDbLoader.Default.getInstance();
-
             ConferenceDbLoader conferenceDbLoader = ConferenceDbLoader.Default.getInstance();
             List<Conference> conferences = conferenceDbLoader.loadAllByCourseId(BlackboardUtilities.getIdFromPk(course.getId(), blackboard.data.course.Course.class));
-
             List<DiscussionBoard> discussionBoards = new LinkedList<DiscussionBoard>();
             for (Conference conference : conferences) {
                 List<Forum> forums = forumDbLoader.loadByConferenceId(conference.getId());
@@ -62,7 +66,8 @@ public class BbDiscussionService implements DiscussionService {
             List<Message> messages = messageDbLoader.loadByForumId(BlackboardUtilities.getIdFromPk(board.getId(), blackboard.data.discussionboard.Forum.class));
             List<DiscussionThread> discussionThreads = new LinkedList<DiscussionThread>();
             for (Message message : messages) {
-                discussionThreads.add(new BbDiscussionThread(message));
+                
+                discussionThreads.add(new BbDiscussionThread(message, null));
             }
             return discussionThreads;
         } catch (PersistenceException ex) {
@@ -74,7 +79,7 @@ public class BbDiscussionService implements DiscussionService {
     public List<DiscussionPost> getDiscussionPostsForThread(DiscussionThread discussionThread) {
         try {
             MessageDbLoader messageDbLoader = MessageDbLoader.Default.getInstance();
-            Message thread = messageDbLoader.loadById(BlackboardUtilities.getIdFromPk(discussionThread.getId(), blackboard.data.discussionboard.Message.class));
+            Message thread = messageDbLoader.loadById(BlackboardUtilities.getIdFromPk(discussionThread.getId(), blackboard.data.discussionboard.Message.class), null, false, true);
             List<DiscussionPost> discussionPosts = new LinkedList<DiscussionPost>();
             if (thread.getResponses() != null) {
                 for (Message post : thread.getResponses()) {
@@ -104,7 +109,7 @@ public class BbDiscussionService implements DiscussionService {
     public DiscussionThread getDiscussionThreadForId(String id) {
         try {
             MessageDbLoader messageDbLoader = MessageDbLoader.Default.getInstance();
-            return new BbDiscussionThread(messageDbLoader.loadById(BlackboardUtilities.getIdFromPk(id, blackboard.data.discussionboard.Message.class)));
+            return new BbDiscussionThread(messageDbLoader.loadById(BlackboardUtilities.getIdFromPk(id, blackboard.data.discussionboard.Message.class)), null);
         } catch (PersistenceException ex) {
             Logger.getLogger(BbDiscussionService.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -121,6 +126,29 @@ public class BbDiscussionService implements DiscussionService {
         }
     }
 
+    private static BbDiscussionBoard getBbDiscussionBoardForForum(Course course, Forum forum, Id contextUserId) {
+        try {
+            MessageDbLoader messageDbLoader = MessageDbLoader.Default.getInstance();
+            MessageCounts mc = messageDbLoader.loadMessageCountsByForumId(forum.getId(), contextUserId);
+            return new BbDiscussionBoard(forum, course, mc);
+        } catch (PersistenceException ex) {
+            Logger.getLogger(BbDiscussionBoard.class.getName()).log(Level.WARNING, "Could not get Message count for db forum: " + forum.getId().getExternalString(), ex);
+            return new BbDiscussionBoard(forum, course, null);
+        }
+    }
+    
+    private class LocalCachedBbUserService {
+        public Map<String, User> users;
+        public User getUserForId(String userId){
+            if(!users.containsKey(userId)){
+                users.put(userId, bbUserService.getUserForId(userId));
+            }
+            return users.get(userId);
+        }
+    }
+    
+/*
+    
     public DiscussionThread insertDiscussionThreadForDiscussionBoardAndUser(DiscussionBoard discussionBoard, DiscussionThread discussionThread, User user) {
         try {
             ForumDbLoader forumDbLoader = ForumDbLoader.Default.getInstance();
@@ -140,7 +168,7 @@ public class BbDiscussionService implements DiscussionService {
             return null;
         }
     }
-
+    
     public DiscussionPost insertDiscussionPostForDiscussionThreadAndUser(DiscussionThread discussionThread, DiscussionPost discussionPost, User user) {
         try {
             MessageDbLoader messageDbLoader = MessageDbLoader.Default.getInstance();
@@ -162,7 +190,7 @@ public class BbDiscussionService implements DiscussionService {
             return null;
         }
     }
-
+    
     public DiscussionPost insertReplyForDiscussionPostForUser(DiscussionPost discussionPost, DiscussionPost discussionReply, User user) {
         try {
             MessageDbLoader messageDbLoader = MessageDbLoader.Default.getInstance();
@@ -189,15 +217,5 @@ public class BbDiscussionService implements DiscussionService {
             return null;
         }
     }
-
-    private static BbDiscussionBoard getBbDiscussionBoardForForum(Course course, Forum forum, Id userId) {
-        try {
-            MessageDbLoader messageDbLoader = MessageDbLoader.Default.getInstance();
-            MessageCounts mc = messageDbLoader.loadMessageCountsByForumId(forum.getId(), userId);
-            return new BbDiscussionBoard(forum, course, mc);
-        } catch (PersistenceException ex) {
-            Logger.getLogger(BbDiscussionBoard.class.getName()).log(Level.WARNING, "Could not get Message count for db forum: " + forum.getId().getExternalString(), ex);
-            return new BbDiscussionBoard(forum, course, null);
-        }
-    }
+*/
 }

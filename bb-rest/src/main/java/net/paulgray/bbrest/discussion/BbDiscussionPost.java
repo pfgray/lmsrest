@@ -23,7 +23,6 @@ public class BbDiscussionPost extends DiscussionPost {
         if (message.getBody() != null) {
             this.body = message.getBody().getText();
         }
-        this.user = message.getUserGivenName() + " " + message.getUserFamilyName();
         if (message.getEditDate() != null) {
             this.lastEdited = message.getEditDate().getTime();
         }
@@ -36,8 +35,10 @@ public class BbDiscussionPost extends DiscussionPost {
         if (message.getParentId() != null) {
             this.threadId = message.getParentId().getExternalString();
         }
-        for (Message response : message.getResponses()) {
-            this.replies.add(new BbDiscussionPost(response));
+        if(message.getResponses() != null){
+            for (Message response : message.getResponses()) {
+                this.replies.add(new BbDiscussionPost(response));
+            }
         }
     }
 

@@ -13,3 +13,5 @@ target/
 
 # Netbeans Config File #
 nb-configuration.xml
+/JavaApplication1/nbproject/private/
+/JavaApplication1/build/

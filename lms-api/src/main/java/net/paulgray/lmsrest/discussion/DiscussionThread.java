@@ -4,8 +4,6 @@
  */
 package net.paulgray.lmsrest.discussion;
 
-import net.paulgray.lmsrest.course.Course;
-import net.paulgray.lmsrest.user.User;
 import java.util.Date;
 
 /**
@@ -20,7 +18,6 @@ public class DiscussionThread {
     protected Date lastEdited;
     protected Boolean locked;
     protected Date postedDate;
-    protected String createdBy;
     
     //used to create links:
     protected String userId;
@@ -72,14 +69,6 @@ public class DiscussionThread {
 
     public void setPostedDate(Date postedDate) {
         this.postedDate = postedDate;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
     }
 
     public String getUserId() {

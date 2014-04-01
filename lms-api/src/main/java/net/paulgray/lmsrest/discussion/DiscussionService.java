@@ -70,7 +70,7 @@ public interface DiscussionService {
      * @param id the of the resource
      * @return the DiscussionBoard 
      */
-    public DiscussionThread insertDiscussionThreadForDiscussionBoardAndUser(DiscussionBoard discussionBoard, DiscussionThread discussionThread, User user);
+    //public DiscussionThread insertDiscussionThreadForDiscussionBoardAndUser(DiscussionBoard discussionBoard, DiscussionThread discussionThread, User user);
     
     /**
      * Inserts a DiscussionThread for the DiscussionBoard
@@ -78,7 +78,7 @@ public interface DiscussionService {
      * @param id the of the resource
      * @return the DiscussionBoard 
      */
-    public DiscussionPost insertDiscussionPostForDiscussionThreadAndUser(DiscussionThread discussionThread, DiscussionPost discussionPost, User user);
+    //public DiscussionPost insertDiscussionPostForDiscussionThreadAndUser(DiscussionThread discussionThread, DiscussionPost discussionPost, User user);
     
 /*
     public List<DiscussionPost> getPostsForDiscussionBoard(DiscussionBoard discussionBoard);

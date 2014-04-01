@@ -17,7 +17,6 @@ public class DiscussionPost {
     protected String body;
     protected Date lastEdited;
     protected Date postedDate;
-    protected String user;
     protected List<DiscussionPost> replies;
     
     protected String userId;
@@ -54,15 +53,7 @@ public class DiscussionPost {
     public void setPostedDate(Date postedDate) {
         this.postedDate = postedDate;
     }
-
-    public String getUser() {
-        return user;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
-
+    
     public String getUserId() {
         return userId;
     }
