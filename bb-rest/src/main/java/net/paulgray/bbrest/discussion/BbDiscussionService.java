@@ -4,8 +4,6 @@
  */
 package net.paulgray.bbrest.discussion;
 
-import blackboard.base.BbList;
-import blackboard.data.ValidationException;
 import blackboard.data.discussionboard.Conference;
 import blackboard.data.discussionboard.Forum;
 import blackboard.data.discussionboard.Message;
@@ -15,7 +13,7 @@ import blackboard.persist.PersistenceException;
 import blackboard.persist.discussionboard.ConferenceDbLoader;
 import blackboard.persist.discussionboard.ForumDbLoader;
 import blackboard.persist.discussionboard.MessageDbLoader;
-import blackboard.persist.discussionboard.MessageDbPersister;
+import java.util.HashMap;
 import net.paulgray.bbrest.BlackboardUtilities;
 import net.paulgray.lmsrest.course.Course;
 import net.paulgray.lmsrest.discussion.DiscussionBoard;
@@ -23,7 +21,6 @@ import net.paulgray.lmsrest.discussion.DiscussionPost;
 import net.paulgray.lmsrest.discussion.DiscussionService;
 import net.paulgray.lmsrest.discussion.DiscussionThread;
 import net.paulgray.lmsrest.user.User;
-import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author pfgray
  */
 public class BbDiscussionService implements DiscussionService {
-    
+
     @Autowired
     BbUserService bbUserService;
 
@@ -60,14 +57,19 @@ public class BbDiscussionService implements DiscussionService {
         }
     }
 
-    public List<DiscussionThread> getDiscussionThreadsForBoard(DiscussionBoard board) {
+    public List<DiscussionThread> getDiscussionThreadsForBoard(DiscussionBoard board, User user) {
         try {
             MessageDbLoader messageDbLoader = MessageDbLoader.Default.getInstance();
-            List<Message> messages = messageDbLoader.loadByForumId(BlackboardUtilities.getIdFromPk(board.getId(), blackboard.data.discussionboard.Forum.class));
+
+            Id forumId = BlackboardUtilities.getIdFromPk(board.getId(), blackboard.data.discussionboard.Forum.class);
+            Id userId = BlackboardUtilities.getIdFromPk(user.getId(), blackboard.data.user.User.class);
+            //List<Message> messages = messageDbLoader.loadMessagesByForumIdWithStatus(forumId, userId, false, false, false, false);
+            List<Message> messages = messageDbLoader.loadTopThreadsWithStatusAndCountsByForumId(forumId, userId, false, false, false);
+
             List<DiscussionThread> discussionThreads = new LinkedList<DiscussionThread>();
+            LocalCachedBbUserService cachedUsers = new LocalCachedBbUserService();
             for (Message message : messages) {
-                
-                discussionThreads.add(new BbDiscussionThread(message, null));
+                discussionThreads.add(new BbDiscussionThread(message, cachedUsers.getUserForId(user.getId())));
             }
             return discussionThreads;
         } catch (PersistenceException ex) {
@@ -76,14 +78,21 @@ public class BbDiscussionService implements DiscussionService {
         }
     }
 
-    public List<DiscussionPost> getDiscussionPostsForThread(DiscussionThread discussionThread) {
+    public List<DiscussionPost> getDiscussionPostsForThread(DiscussionThread discussionThread, User user) {
         try {
             MessageDbLoader messageDbLoader = MessageDbLoader.Default.getInstance();
-            Message thread = messageDbLoader.loadById(BlackboardUtilities.getIdFromPk(discussionThread.getId(), blackboard.data.discussionboard.Message.class), null, false, true);
+            //Message thread = messageDbLoader.loadById(BlackboardUtilities.getIdFromPk(discussionThread.getId(), blackboard.data.discussionboard.Message.class), null, false, true);
+            Id threadId = BlackboardUtilities.getIdFromPk(discussionThread.getId(), blackboard.data.discussionboard.Message.class);
+            Id userId = BlackboardUtilities.getIdFromPk(user.getId(), blackboard.data.user.User.class);
+            List<Message> replies = messageDbLoader.loadMessageThreadWithStatus(threadId, userId, false, true, true);
             List<DiscussionPost> discussionPosts = new LinkedList<DiscussionPost>();
-            if (thread.getResponses() != null) {
-                for (Message post : thread.getResponses()) {
-                    discussionPosts.add(new BbDiscussionPost(post));
+
+            //todo: how to best build this tree?
+            if (replies != null) {
+                for (Message post : replies) {
+                    if (post.getParentId().equals(threadId)) {
+                        discussionPosts.add(new BbDiscussionPost(post));
+                    }
                 }
             }
             return discussionPosts;
@@ -109,7 +118,7 @@ public class BbDiscussionService implements DiscussionService {
     public DiscussionThread getDiscussionThreadForId(String id) {
         try {
             MessageDbLoader messageDbLoader = MessageDbLoader.Default.getInstance();
-            return new BbDiscussionThread(messageDbLoader.loadById(BlackboardUtilities.getIdFromPk(id, blackboard.data.discussionboard.Message.class)), null);
+            return new BbDiscussionThread(messageDbLoader.loadById(BlackboardUtilities.getIdFromPk(id, blackboard.data.discussionboard.Message.class), null), null);
         } catch (PersistenceException ex) {
             Logger.getLogger(BbDiscussionService.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -126,6 +135,18 @@ public class BbDiscussionService implements DiscussionService {
         }
     }
 
+    public void setDiscussionBoardReadStatus(String dboardId, User user, Boolean read) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void setDiscussionThreadReadStatus(String id, User user, Boolean read) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void setDiscussionPostReadStatus(String id, User user, Boolean read) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     private static BbDiscussionBoard getBbDiscussionBoardForForum(Course course, Forum forum, Id contextUserId) {
         try {
             MessageDbLoader messageDbLoader = MessageDbLoader.Default.getInstance();
@@ -136,86 +157,87 @@ public class BbDiscussionService implements DiscussionService {
             return new BbDiscussionBoard(forum, course, null);
         }
     }
-    
+
     private class LocalCachedBbUserService {
-        public Map<String, User> users;
-        public User getUserForId(String userId){
-            if(!users.containsKey(userId)){
+
+        public Map<String, User> users = new HashMap<String, User>();
+
+        public User getUserForId(String userId) {
+            if (!users.containsKey(userId)) {
                 users.put(userId, bbUserService.getUserForId(userId));
             }
             return users.get(userId);
         }
     }
-    
-/*
-    
-    public DiscussionThread insertDiscussionThreadForDiscussionBoardAndUser(DiscussionBoard discussionBoard, DiscussionThread discussionThread, User user) {
-        try {
-            ForumDbLoader forumDbLoader = ForumDbLoader.Default.getInstance();
-            Forum forum = forumDbLoader.loadById(BlackboardUtilities.getIdFromPk(discussionBoard.getId(), blackboard.data.discussionboard.Forum.class));
-            MessageDbPersister messageDbPersister = MessageDbPersister.Default.getInstance();
-            Message msg = BbDiscussionThread.toMessage(discussionThread, forum);
-            msg.setLifecycle(Message.MessageLifecycle.DEFAULT);
-            msg.setUserId(BlackboardUtilities.getIdFromPk(user.getId(), blackboard.data.user.User.class));
-            messageDbPersister.persist(msg);
-            BbDiscussionThread thread = new BbDiscussionThread(msg);
-            return thread;
-        } catch (PersistenceException ex) {
-            Logger.getLogger(BbDiscussionService.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        } catch (ValidationException ex) {
-            Logger.getLogger(BbDiscussionService.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
-    }
-    
-    public DiscussionPost insertDiscussionPostForDiscussionThreadAndUser(DiscussionThread discussionThread, DiscussionPost discussionPost, User user) {
-        try {
-            MessageDbLoader messageDbLoader = MessageDbLoader.Default.getInstance();
-            Message thread = messageDbLoader.loadById(BlackboardUtilities.getIdFromPk(discussionThread.getId(), blackboard.data.discussionboard.Message.class));
-            MessageDbPersister messageDbPersister = MessageDbPersister.Default.getInstance();
-            Message msg = BbDiscussionPost.toMessage(discussionPost, user.getId());
-            msg.setParentId(thread.getId());
-            msg.setForumId(BlackboardUtilities.getIdFromPk(discussionThread.getForumId(), blackboard.data.discussionboard.Forum.class));
-            msg.setUserId(BlackboardUtilities.getIdFromPk(user.getId(), blackboard.data.user.User.class));
-            msg.setPostDate(Calendar.getInstance());
-            messageDbPersister.persist(msg);
-            BbDiscussionPost post = new BbDiscussionPost(msg);
-            return post;
-        } catch (PersistenceException ex) {
-            Logger.getLogger(BbDiscussionService.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        } catch (ValidationException ex) {
-            Logger.getLogger(BbDiscussionService.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
-    }
-    
-    public DiscussionPost insertReplyForDiscussionPostForUser(DiscussionPost discussionPost, DiscussionPost discussionReply, User user) {
-        try {
-            MessageDbLoader messageDbLoader = MessageDbLoader.Default.getInstance();
-            Message post = messageDbLoader.loadById(BlackboardUtilities.getIdFromPk(discussionPost.getId(), blackboard.data.discussionboard.Message.class));
-            MessageDbPersister messageDbPersister = MessageDbPersister.Default.getInstance();
-            Message reply = BbDiscussionPost.toMessage(discussionReply, user.getId());
 
-            BbList<Message> replies = post.getResponses();
-            if (replies == null) {
-                replies = new BbList<Message>();
-            }
-            reply.setUserId(BlackboardUtilities.getIdFromPk(user.getId(), blackboard.data.user.User.class));
-            reply.setPostDate(Calendar.getInstance());
-            replies.add(reply);
-            post.setResponses(replies);
+    /*
+     public DiscussionThread insertDiscussionThreadForDiscussionBoardAndUser(DiscussionBoard discussionBoard, DiscussionThread discussionThread, User user) {
+     try {
+     ForumDbLoader forumDbLoader = ForumDbLoader.Default.getInstance();
+     Forum forum = forumDbLoader.loadById(BlackboardUtilities.getIdFromPk(discussionBoard.getId(), blackboard.data.discussionboard.Forum.class));
+     MessageDbPersister messageDbPersister = MessageDbPersister.Default.getInstance();
+     Message msg = BbDiscussionThread.toMessage(discussionThread, forum);
+     msg.setLifecycle(Message.MessageLifecycle.DEFAULT);
+     msg.setUserId(BlackboardUtilities.getIdFromPk(user.getId(), blackboard.data.user.User.class));
+     messageDbPersister.persist(msg);
+     BbDiscussionThread thread = new BbDiscussionThread(msg);
+     return thread;
+     } catch (PersistenceException ex) {
+     Logger.getLogger(BbDiscussionService.class.getName()).log(Level.SEVERE, null, ex);
+     return null;
+     } catch (ValidationException ex) {
+     Logger.getLogger(BbDiscussionService.class.getName()).log(Level.SEVERE, null, ex);
+     return null;
+     }
+     }
+    
+     public DiscussionPost insertDiscussionPostForDiscussionThreadAndUser(DiscussionThread discussionThread, DiscussionPost discussionPost, User user) {
+     try {
+     MessageDbLoader messageDbLoader = MessageDbLoader.Default.getInstance();
+     Message thread = messageDbLoader.loadById(BlackboardUtilities.getIdFromPk(discussionThread.getId(), blackboard.data.discussionboard.Message.class));
+     MessageDbPersister messageDbPersister = MessageDbPersister.Default.getInstance();
+     Message msg = BbDiscussionPost.toMessage(discussionPost, user.getId());
+     msg.setParentId(thread.getId());
+     msg.setForumId(BlackboardUtilities.getIdFromPk(discussionThread.getForumId(), blackboard.data.discussionboard.Forum.class));
+     msg.setUserId(BlackboardUtilities.getIdFromPk(user.getId(), blackboard.data.user.User.class));
+     msg.setPostDate(Calendar.getInstance());
+     messageDbPersister.persist(msg);
+     BbDiscussionPost post = new BbDiscussionPost(msg);
+     return post;
+     } catch (PersistenceException ex) {
+     Logger.getLogger(BbDiscussionService.class.getName()).log(Level.SEVERE, null, ex);
+     return null;
+     } catch (ValidationException ex) {
+     Logger.getLogger(BbDiscussionService.class.getName()).log(Level.SEVERE, null, ex);
+     return null;
+     }
+     }
+    
+     public DiscussionPost insertReplyForDiscussionPostForUser(DiscussionPost discussionPost, DiscussionPost discussionReply, User user) {
+     try {
+     MessageDbLoader messageDbLoader = MessageDbLoader.Default.getInstance();
+     Message post = messageDbLoader.loadById(BlackboardUtilities.getIdFromPk(discussionPost.getId(), blackboard.data.discussionboard.Message.class));
+     MessageDbPersister messageDbPersister = MessageDbPersister.Default.getInstance();
+     Message reply = BbDiscussionPost.toMessage(discussionReply, user.getId());
 
-            messageDbPersister.persist(post);
-            return new BbDiscussionPost(reply);
-        } catch (PersistenceException ex) {
-            Logger.getLogger(BbDiscussionService.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        } catch (ValidationException ex) {
-            Logger.getLogger(BbDiscussionService.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
-    }
-*/
+     BbList<Message> replies = post.getResponses();
+     if (replies == null) {
+     replies = new BbList<Message>();
+     }
+     reply.setUserId(BlackboardUtilities.getIdFromPk(user.getId(), blackboard.data.user.User.class));
+     reply.setPostDate(Calendar.getInstance());
+     replies.add(reply);
+     post.setResponses(replies);
+
+     messageDbPersister.persist(post);
+     return new BbDiscussionPost(reply);
+     } catch (PersistenceException ex) {
+     Logger.getLogger(BbDiscussionService.class.getName()).log(Level.SEVERE, null, ex);
+     return null;
+     } catch (ValidationException ex) {
+     Logger.getLogger(BbDiscussionService.class.getName()).log(Level.SEVERE, null, ex);
+     return null;
+     }
+     }
+     */
 }

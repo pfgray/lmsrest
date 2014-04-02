@@ -34,7 +34,7 @@ public class DiscussionPostController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{discussionThread}/" + PATH)
     public ResponseEntity getPostsForDiscussionThread(@ContextUser User user, @PathVariable DiscussionThread discussionThread) {
-        List<DiscussionPost> posts = discussionService.getDiscussionPostsForThread(discussionThread);
+        List<DiscussionPost> posts = discussionService.getDiscussionPostsForThread(discussionThread, user);
         return new ResponseEntity(posts, HttpStatus.OK);
     }
 /*

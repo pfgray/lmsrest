@@ -4,7 +4,6 @@
  */
 package net.paulgray.lmsrest.user;
 
-import net.paulgray.lmsrest.enrollment.EnrollmentResourceAssembler;
 import net.paulgray.lmsrest.enrollment.EnrollmentService;
 import net.paulgray.lmsrest.web.ContextUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,16 +27,11 @@ public class UserController {
     UserService userService;
     @Autowired
     EnrollmentService enrollmentService;
-    //Resource Assemblers
-    @Autowired
-    UserResourceAssembler userResourceAssembler;
-    @Autowired
-    EnrollmentResourceAssembler enrollmentResourceAssembler;
 
     
     @RequestMapping(method = RequestMethod.GET, produces = "application/json") 
     public ResponseEntity getUser(@ContextUser User user) {
-        return new ResponseEntity<UserResource>(userResourceAssembler.toResource(user), HttpStatus.OK);
+        return new ResponseEntity(user, HttpStatus.OK);
     }
     
     

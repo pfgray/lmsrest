@@ -15,7 +15,6 @@ import net.paulgray.lmsrest.discussion.DiscussionBoard;
  */
 public class BbDiscussionBoard extends DiscussionBoard {
     
-    public String lineitem_id;
     public Integer unread_messages;
     public Integer total_messages;
 
@@ -29,9 +28,6 @@ public class BbDiscussionBoard extends DiscussionBoard {
         }
         if(forum.getModifiedDate() != null){
             this.lastEdited = forum.getModifiedDate().getTime();
-        }
-        if(forum.getProperties() != null){
-            this.lineitem_id = forum.getProperties().getForumGradeLineitemPk();
         }
         this.available = forum.getIsAvailable();
         if(forum.getEndDate() != null){

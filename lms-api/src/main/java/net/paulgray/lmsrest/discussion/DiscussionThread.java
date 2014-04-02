@@ -5,6 +5,7 @@
 package net.paulgray.lmsrest.discussion;
 
 import java.util.Date;
+import net.paulgray.lmsrest.user.User;
 
 /**
  *
@@ -13,15 +14,11 @@ import java.util.Date;
 public class DiscussionThread {
     
     protected String id;
-    protected String subject;
     protected String text;
     protected Date lastEdited;
-    protected Boolean locked;
     protected Date postedDate;
     
-    //used to create links:
-    protected String userId;
-    protected String forumId;
+    protected User user;
 
     public String getId() {
         return id;
@@ -29,14 +26,6 @@ public class DiscussionThread {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
     }
 
     public String getText() {
@@ -55,14 +44,6 @@ public class DiscussionThread {
         this.lastEdited = lastEdited;
     }
 
-    public Boolean getLocked() {
-        return locked;
-    }
-
-    public void setLocked(Boolean locked) {
-        this.locked = locked;
-    }
-
     public Date getPostedDate() {
         return postedDate;
     }
@@ -71,20 +52,12 @@ public class DiscussionThread {
         this.postedDate = postedDate;
     }
 
-    public String getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public String getForumId() {
-        return forumId;
-    }
-
-    public void setForumId(String forumId) {
-        this.forumId = forumId;
-    }    
-    
 }

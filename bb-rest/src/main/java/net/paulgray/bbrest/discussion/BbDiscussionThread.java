@@ -5,8 +5,8 @@
 package net.paulgray.bbrest.discussion;
 
 import blackboard.data.discussionboard.Message;
-import blackboard.data.discussionboard.MessageCounts;
 import net.paulgray.lmsrest.discussion.DiscussionThread;
+import net.paulgray.lmsrest.user.User;
 
 /**
  *
@@ -16,13 +16,16 @@ public class BbDiscussionThread extends DiscussionThread {
     
     public Integer unread_messages;
     public Integer total_messages;
+    public Boolean read;
+    public String subject;
 
-    BbDiscussionThread(Message message, MessageCounts counts) {
-        if(counts != null){
-            this.unread_messages = counts.getUnreadCount();
-            this.total_messages = counts.getTotalCount();
+    BbDiscussionThread(Message message, User user) {
+        if(message.getMessageStatus() != null){
+            this.unread_messages = message.getMessageStatus().getUnreadCountOfSelfAndChildren();
+            this.total_messages = message.getMessageStatus().getTotalCount();
+            this.read = message.getMessageStatus().getIsRead();
         }
-        
+        this.user = user;
         if (message.getId() != null) {
             this.id = message.getId().getExternalString();
         }
@@ -30,6 +33,9 @@ public class BbDiscussionThread extends DiscussionThread {
             this.text = message.getBody().getText();
         }
         this.subject = message.getSubject();
+        if(message.getModifiedDate() != null){
+            this.postedDate = message.getModifiedDate().getTime();
+        }
     }
     /*
     public static Message toMessage(DiscussionThread thread, Forum forum){
