@@ -86,20 +86,26 @@ public class BbDiscussionService implements DiscussionService {
         try {
             MessageDbLoader messageDbLoader = MessageDbLoader.Default.getInstance();
             //Message thread = messageDbLoader.loadById(BlackboardUtilities.getIdFromPk(discussionThread.getId(), blackboard.data.discussionboard.Message.class), null, false, true);
-            Id threadId = BlackboardUtilities.getIdFromPk(discussionThread.getId(), blackboard.data.discussionboard.Message.class);
-            Id userId = BlackboardUtilities.getIdFromPk(user.getId(), blackboard.data.user.User.class);
-            List<Message> replies = messageDbLoader.loadMessageThreadWithStatus(threadId, userId, false, true, true);
+            final Id threadId = BlackboardUtilities.getIdFromPk(discussionThread.getId(), blackboard.data.discussionboard.Message.class);
+            final Id userId = BlackboardUtilities.getIdFromPk(user.getId(), blackboard.data.user.User.class);
+            final List<Message> replies = messageDbLoader.loadMessageThreadWithStatus(threadId, userId, false, true, true);
             List<DiscussionPost> discussionPosts = new LinkedList<DiscussionPost>();
 
             discussionPosts.add(new BbDiscussionPost(buildMessageTreeFromList(getTopLevelMessage(replies), replies)));
-            
-            
-            List<Id> messageIds = new ArrayList<Id>(replies.size());
-            UserMsgStateDbPersister userMsgStateDbPersister = UserMsgStateDbPersister.Default.getInstance();
-            for (Message msg : replies) {
-                messageIds.add(msg.getId());
-            }
-            userMsgStateDbPersister.incrementMessagesReadCount(messageIds, userId);
+
+            //mark the messages as read
+            new Thread() {
+                public void run() {
+                    for (Message msg : replies) {
+                        try {
+                            UserMsgStateDbPersister userMsgStateDbPersister = UserMsgStateDbPersister.Default.getInstance();
+                            userMsgStateDbPersister.updateReadStatusByMsgId(true, msg.getId(), userId);
+                        } catch (PersistenceException ex) {
+                            Logger.getLogger(BbDiscussionService.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+            }.start();
 
             return discussionPosts;
         } catch (PersistenceException ex) {
