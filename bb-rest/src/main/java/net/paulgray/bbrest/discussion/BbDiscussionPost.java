@@ -17,7 +17,12 @@ import java.util.LinkedList;
  */
 public class BbDiscussionPost extends DiscussionPost {
 
+    public String parentId;
+    
     public BbDiscussionPost(Message message) {
+        
+        
+        
         this.replies = new LinkedList<DiscussionPost>();
         this.id = message.getId().getExternalString();
         if (message.getBody() != null) {
@@ -33,12 +38,15 @@ public class BbDiscussionPost extends DiscussionPost {
             this.userId = message.getUserId().getExternalString();
         }
         if (message.getParentId() != null) {
-            this.threadId = message.getParentId().getExternalString();
+            this.parentId = message.getParentId().getExternalString();
         }
         if(message.getResponses() != null){
+            System.out.println("****responses was not null, length:" + message.getResponses().size());
             for (Message response : message.getResponses()) {
                 this.replies.add(new BbDiscussionPost(response));
             }
+        } else {
+            System.out.println("****responses was null");
         }
     }
 

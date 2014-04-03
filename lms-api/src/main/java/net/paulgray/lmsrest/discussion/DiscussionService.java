@@ -62,33 +62,6 @@ public interface DiscussionService {
      * @return the DiscussionPost 
      */
     public DiscussionPost getDiscussionPostForId(String id);
-        
-    /**
-     * Mark a DiscussionBoard as 'read' for user
-     *
-     * @param id the id of the discussion board
-     * @param user the context user
-     * @param read should be true to mark the discussion board as 'read'
-     */
-    public void setDiscussionBoardReadStatus(String dboardId, User user, Boolean read);
-
-    /**
-     * Returns a DiscussionThread for the id
-     *
-     * @param id the id of the thread
-     * @param user the context user
-     * @param read should be true to mark the thread as 'read'
-     */
-    public void setDiscussionThreadReadStatus(String id, User user, Boolean read);
-
-    /**
-     * Returns a DiscussionPost for the id
-     *
-     * @param id the id of the post
-     * @param user the context user
-     * @param read should be true to mark the post as 'read'
-     */
-    public void setDiscussionPostReadStatus(String id, User user, Boolean read);
     
     
     /**

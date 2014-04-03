@@ -4,6 +4,7 @@
  */
 package net.paulgray.bbrest.discussion;
 
+import blackboard.base.BbList;
 import blackboard.data.discussionboard.Conference;
 import blackboard.data.discussionboard.Forum;
 import blackboard.data.discussionboard.Message;
@@ -13,6 +14,8 @@ import blackboard.persist.PersistenceException;
 import blackboard.persist.discussionboard.ConferenceDbLoader;
 import blackboard.persist.discussionboard.ForumDbLoader;
 import blackboard.persist.discussionboard.MessageDbLoader;
+import blackboard.persist.discussionboard.UserMsgStateDbPersister;
+import java.util.ArrayList;
 import java.util.HashMap;
 import net.paulgray.bbrest.BlackboardUtilities;
 import net.paulgray.lmsrest.course.Course;
@@ -69,7 +72,8 @@ public class BbDiscussionService implements DiscussionService {
             List<DiscussionThread> discussionThreads = new LinkedList<DiscussionThread>();
             LocalCachedBbUserService cachedUsers = new LocalCachedBbUserService();
             for (Message message : messages) {
-                discussionThreads.add(new BbDiscussionThread(message, cachedUsers.getUserForId(user.getId())));
+                String msgUserId = message.getUserId() != null ? message.getUserId().getExternalString() : null;
+                discussionThreads.add(new BbDiscussionThread(message, cachedUsers.getUserForId(msgUserId)));
             }
             return discussionThreads;
         } catch (PersistenceException ex) {
@@ -87,14 +91,16 @@ public class BbDiscussionService implements DiscussionService {
             List<Message> replies = messageDbLoader.loadMessageThreadWithStatus(threadId, userId, false, true, true);
             List<DiscussionPost> discussionPosts = new LinkedList<DiscussionPost>();
 
-            //todo: how to best build this tree?
-            if (replies != null) {
-                for (Message post : replies) {
-                    if (post.getParentId().equals(threadId)) {
-                        discussionPosts.add(new BbDiscussionPost(post));
-                    }
-                }
+            discussionPosts.add(new BbDiscussionPost(buildMessageTreeFromList(getTopLevelMessage(replies), replies)));
+            
+            
+            List<Id> messageIds = new ArrayList<Id>(replies.size());
+            UserMsgStateDbPersister userMsgStateDbPersister = UserMsgStateDbPersister.Default.getInstance();
+            for (Message msg : replies) {
+                messageIds.add(msg.getId());
             }
+            userMsgStateDbPersister.incrementMessagesReadCount(messageIds, userId);
+
             return discussionPosts;
         } catch (PersistenceException ex) {
             Logger.getLogger(BbDiscussionService.class.getName()).log(Level.SEVERE, null, ex);
@@ -135,16 +141,42 @@ public class BbDiscussionService implements DiscussionService {
         }
     }
 
-    public void setDiscussionBoardReadStatus(String dboardId, User user, Boolean read) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void setDiscussionThreadReadStatus(Message thread, blackboard.data.user.User user, Boolean read) {
+        try {
+            UserMsgStateDbPersister userMsgStateDbPersister = UserMsgStateDbPersister.Default.getInstance();
+            userMsgStateDbPersister.updateThreadReadStatusByTopMsgId(read, thread.getId(), user.getId());
+        } catch (PersistenceException ex) {
+            Logger.getLogger(BbDiscussionService.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
-    public void setDiscussionThreadReadStatus(String id, User user, Boolean read) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void setDiscussionPostReadStatus(Message message, blackboard.data.user.User user, Boolean read) {
+        try {
+            UserMsgStateDbPersister userMsgStateDbPersister = UserMsgStateDbPersister.Default.getInstance();
+            userMsgStateDbPersister.updateReadStatusByMsgId(read, message.getId(), user.getId());
+        } catch (PersistenceException ex) {
+            Logger.getLogger(BbDiscussionService.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
-    public void setDiscussionPostReadStatus(String id, User user, Boolean read) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private Message buildMessageTreeFromList(Message parent, List<Message> messages) {
+        BbList<Message> children = new BbList<Message>();
+        for (Message post : messages) {
+            if (post.getParentId().equals(parent.getId())) {
+                children.add(buildMessageTreeFromList(post, messages));
+            }
+        }
+        parent.setResponses(children);
+        return parent;
+    }
+
+    private Message getTopLevelMessage(List<Message> messages) {
+        for (Message msg : messages) {
+            if (msg.isTopLevelMessage()) {
+                return msg;
+            }
+        }
+        return null;
     }
 
     private static BbDiscussionBoard getBbDiscussionBoardForForum(Course course, Forum forum, Id contextUserId) {
@@ -163,10 +195,14 @@ public class BbDiscussionService implements DiscussionService {
         public Map<String, User> users = new HashMap<String, User>();
 
         public User getUserForId(String userId) {
-            if (!users.containsKey(userId)) {
-                users.put(userId, bbUserService.getUserForId(userId));
+            if (userId != null) {
+                if (!users.containsKey(userId)) {
+                    users.put(userId, bbUserService.getUserForId(userId));
+                }
+                return users.get(userId);
+            } else {
+                return null;
             }
-            return users.get(userId);
         }
     }
 
