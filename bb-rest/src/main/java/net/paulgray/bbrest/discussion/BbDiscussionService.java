@@ -200,9 +200,7 @@ public class BbDiscussionService implements DiscussionService {
     }
 
     private class LocalCachedBbUserService {
-
         public Map<String, User> users = new HashMap<String, User>();
-
         public User getUserForId(String userId) {
             if (userId != null) {
                 if (!users.containsKey(userId)) {

@@ -39,4 +39,20 @@ public class BbDiscussionBoard extends DiscussionBoard {
             this.total_messages = mc.getTotalCount();
         }
     }
+
+    public Integer getUnread_messages() {
+        return unread_messages;
+    }
+
+    public void setUnread_messages(Integer unread_messages) {
+        this.unread_messages = unread_messages;
+    }
+
+    public Integer getTotal_messages() {
+        return total_messages;
+    }
+
+    public void setTotal_messages(Integer total_messages) {
+        this.total_messages = total_messages;
+    }
 }

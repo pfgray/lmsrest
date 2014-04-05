@@ -14,12 +14,19 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.paulgray.bbrest.discussion.BbDiscussionBoard;
+import net.paulgray.bbrest.discussion.BbDiscussionService;
+import net.paulgray.lmsrest.discussion.DiscussionBoard;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
  * @author pfgray
  */
 public class BbCourseService implements CourseService {
+    
+    @Autowired
+    BbDiscussionService bbDiscussionService;
 
     @Override
     public Course getCourseForId(String id) {
@@ -40,7 +47,12 @@ public class BbCourseService implements CourseService {
             List<Course> toReturn = new LinkedList<Course>();
             for(blackboard.data.course.Course course : courses){
                 if(course.getId() != null && course.getCourseId().contains(courseFilter)){
-                    toReturn.add(new BbCourse(course, BlackboardUtilities.getIdFromPk(user.getId(), blackboard.data.user.User.class)));
+                    BbCourse bbCourse = new BbCourse(course, BlackboardUtilities.getIdFromPk(user.getId(), blackboard.data.user.User.class));
+                    List<DiscussionBoard> dbs = bbDiscussionService.getDiscussionBoardsForCourseAndUser(bbCourse, user);
+                    for(DiscussionBoard db : dbs){
+                        bbCourse.unread_discussion_count = bbCourse.unread_discussion_count + ((BbDiscussionBoard)db).getUnread_messages();
+                    }
+                    toReturn.add(bbCourse);
                 }
             }
             return toReturn;
