@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -29,8 +30,8 @@ public class AssignmentController<T> {
     AssignmentService assignmentService;
 
     @RequestMapping(produces = "application/json", value=AssignmentController.PATH, method = RequestMethod.GET)
-    public ResponseEntity getAssignments(@ContextUser User user) {
-        List<T> assignments = assignmentService.getAssignments(user);
+    public ResponseEntity getAssignments(@ContextUser User user, @RequestParam(value = "courseFilter", defaultValue = "") String courseFilter) {
+        List<T> assignments = assignmentService.getAssignments(user, courseFilter);
         return new ResponseEntity(assignments, HttpStatus.OK);
     }
     

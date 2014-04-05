@@ -5,9 +5,7 @@
 package net.paulgray.bbrest.course;
 
 import blackboard.persist.PersistenceException;
-import blackboard.persist.SearchOperator;
 import blackboard.persist.course.CourseDbLoader;
-import blackboard.persist.course.CourseSearch;
 import net.paulgray.bbrest.BlackboardUtilities;
 import net.paulgray.lmsrest.course.Course;
 import net.paulgray.lmsrest.course.CourseService;

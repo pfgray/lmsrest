@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.paulgray.bbrest.BlackboardUtilities;
 import net.paulgray.bbrest.assignment.builder.BbAssignmentBuilder;
 import net.paulgray.bbrest.assignment.builder.BbAssignmentFactory;
@@ -34,45 +36,50 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class BbAssignmentService implements AssignmentService<BbAssignment> {
-    
+
     @Autowired
     BbCourseService bbCourseService;
-    
+
     @Autowired
     BbDiscussionService bbDiscussionService;
-    
-        public static final List<String> acceptedAssignmentTypes = 
-            Arrays.asList(OutcomeDefinitionCategory.ASSIGNMENT,
-                          OutcomeDefinitionCategory.BLOG,
-                          OutcomeDefinitionCategory.DISCUSSION,
-                          OutcomeDefinitionCategory.ESSAY,
-                          OutcomeDefinitionCategory.EXAM,
-                          OutcomeDefinitionCategory.EXTRA_CREDIT,
-                          OutcomeDefinitionCategory.FINAL_EXAM,
-                          OutcomeDefinitionCategory.GROUP_PROJECT,
-                          OutcomeDefinitionCategory.HOMEWORK,
-                          OutcomeDefinitionCategory.JOURNAL,
-                          OutcomeDefinitionCategory.LAB,
-                          OutcomeDefinitionCategory.MIDTERM_EXAM,
-                          OutcomeDefinitionCategory.OTHER,
-                          OutcomeDefinitionCategory.PAPER,
-                          OutcomeDefinitionCategory.PRESENTATION,
-                          OutcomeDefinitionCategory.PROBLEM_SET,
-                          OutcomeDefinitionCategory.WIKI,
-                          OutcomeDefinitionCategory.TEST,
-                          OutcomeDefinitionCategory.SURVEY,
-                          OutcomeDefinitionCategory.SCORM,
-                          OutcomeDefinitionCategory.RESOURCE_BUNDLE,
-                          OutcomeDefinitionCategory.QUIZ);
-    
-    {   
+
+    public static final List<String> acceptedAssignmentTypes
+            = Arrays.asList(OutcomeDefinitionCategory.ASSIGNMENT,
+                    OutcomeDefinitionCategory.BLOG,
+                    OutcomeDefinitionCategory.DISCUSSION,
+                    OutcomeDefinitionCategory.ESSAY,
+                    OutcomeDefinitionCategory.EXAM,
+                    OutcomeDefinitionCategory.EXTRA_CREDIT,
+                    OutcomeDefinitionCategory.FINAL_EXAM,
+                    OutcomeDefinitionCategory.GROUP_PROJECT,
+                    OutcomeDefinitionCategory.HOMEWORK,
+                    OutcomeDefinitionCategory.JOURNAL,
+                    OutcomeDefinitionCategory.LAB,
+                    OutcomeDefinitionCategory.MIDTERM_EXAM,
+                    OutcomeDefinitionCategory.OTHER,
+                    OutcomeDefinitionCategory.PAPER,
+                    OutcomeDefinitionCategory.PRESENTATION,
+                    OutcomeDefinitionCategory.PROBLEM_SET,
+                    OutcomeDefinitionCategory.WIKI,
+                    OutcomeDefinitionCategory.TEST,
+                    OutcomeDefinitionCategory.SURVEY,
+                    OutcomeDefinitionCategory.SCORM,
+                    OutcomeDefinitionCategory.RESOURCE_BUNDLE,
+                    OutcomeDefinitionCategory.QUIZ);
+
+    {
         for (int i = 0; i < acceptedAssignmentTypes.size(); i++) {
             acceptedAssignmentTypes.set(i, acceptedAssignmentTypes.get(i).replaceAll("\\.name", ""));
         }
     }
 
-    public List<BbAssignment> getAssignments(User user) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<BbAssignment> getAssignments(User user, String courseFilter) {
+        List<BbAssignment> toReturn = new LinkedList<BbAssignment>();
+        List<Course> courses = bbCourseService.getCoursesForUser(user, courseFilter);
+        for (Course course : courses) {
+            toReturn.addAll(this.getAssignments(user, course));
+        }
+        return toReturn;
     }
 
     public List<BbAssignment> getAssignments(User user, Course course) {
@@ -88,25 +95,22 @@ public class BbAssignmentService implements AssignmentService<BbAssignment> {
             Id courseId = BlackboardUtilities.getIdFromPk(course.getId(), blackboard.data.course.Course.class);
             List<Lineitem> lineitems = lineitemDbLoader.loadByCourseId(courseId);
             List<BbAssignment> toReturn = new LinkedList<BbAssignment>();
-            
-            
-            
-            
+
             Map<String, BbAssignmentFactory> assignmentBuilders = new HashMap<String, BbAssignmentFactory>();
             assignmentBuilders.put(OutcomeDefinitionCategory.ASSIGNMENT.replaceAll("\\.name", ""), new BbAssignmentBuilder());
             assignmentBuilders.put(OutcomeDefinitionCategory.DISCUSSION.replaceAll("\\.name", ""), new DiscussionAssignmentBuilder(courseId));
-            
-            for(Lineitem li : lineitems){
-                if(li != null && li.getIsAvailable()){
+
+            for (Lineitem li : lineitems) {
+                if (li != null && li.getIsAvailable()) {
                     //&& li.getAssessmentLocation().equals(Lineitem.AssessmentLocation.INTERNAL)){
-                        //&& acceptedAssignmentTypes.contains(li.getOutcomeDefinition().getCategory().getTitle())){
+                    //&& acceptedAssignmentTypes.contains(li.getOutcomeDefinition().getCategory().getTitle())){
                     System.out.println("****checking factories for: " + li.getOutcomeDefinition().getCategory().getTitle());
                     BbAssignmentFactory factory = assignmentBuilders.get(li.getOutcomeDefinition().getCategory().getTitle());
-                    if(factory == null){
+                    if (factory == null) {
                         System.out.println("****factory not found");
                         factory = new DefaultAssignmentBuilder();
                     }
-                    
+
                     toReturn.add(factory.getBbAssignment(li, course));
                 }
             }

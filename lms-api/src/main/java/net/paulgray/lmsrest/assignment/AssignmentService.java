@@ -16,7 +16,7 @@ import net.paulgray.lmsrest.user.User;
  */
 public interface AssignmentService<T> {
     
-    public List<T> getAssignments(User user);
+    public List<T> getAssignments(User user, String courseFilter);
     
     public List<T> getAssignments(User user, Course course);
     
