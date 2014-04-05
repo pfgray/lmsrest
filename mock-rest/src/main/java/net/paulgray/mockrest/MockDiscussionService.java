@@ -51,5 +51,13 @@ public class MockDiscussionService implements DiscussionService {
     public DiscussionPost insertDiscussionPostForDiscussionThreadAndUser(DiscussionThread discussionThread, DiscussionPost discussionPost, User user) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    public List<DiscussionThread> getDiscussionThreadsForBoard(DiscussionBoard board, User user) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public List<DiscussionPost> getDiscussionPostsForThread(DiscussionThread thread, User user) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

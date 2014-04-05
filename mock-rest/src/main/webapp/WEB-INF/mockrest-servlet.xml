@@ -27,39 +27,5 @@
    
     <!--these are our controllers-->
     <context:component-scan base-package="net.paulgray.lmsrest.user" />
-    <context:component-scan base-package="net.paulgray.lmsrest.course" />
-    <context:component-scan base-package="net.paulgray.lmsrest.enrollment" />
-    <context:component-scan base-package="net.paulgray.lmsrest.announcement" />
-    <context:component-scan base-package="net.paulgray.lmsrest.discussion" />
-    <context:component-scan base-package="net.paulgray.lmsrest.assignment" />
-    
-    <!--
-    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-        <property name="basenames">
-            <list>
-                <value>/WEB-INF/messages/errors</value>
-            </list>
-        </property>
-        <property name="cacheSeconds" value="30" />
-    </bean>
-    -->
-    <!--
-    <bean id="restExceptionResolver" class="com.stormpath.spring.web.servlet.handler.RestExceptionHandler">
-        <property name="order" value="100"></property>
-        <property name="errorResolver">
-            <bean class="com.stormpath.spring.web.servlet.handler.DefaultRestErrorResolver">
-                <property name="localeResolver" ref="localeResolver"></property>
-                <property name="defaultMoreInfoUrl" value="mailto:support@mycompany.com"></property>
-                <property name="exceptionMappingDefinitions">
-                    <map>
-                        <entry key="org.springframework.security.access.AccessDeniedException" value="403, error.access_denied"></entry>
-                        <entry key="org.springframework.security.authentication.AuthenticationCredentialsNotFoundException" value="403, error.missing_credentials"></entry>
-                        
-                        <entry key="Throwable" value="500, error.internal"></entry>
-                    </map>
-                </property>
-            </bean>
-        </property>
-    </bean>
-    -->
+
 </beans>

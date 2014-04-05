@@ -16,13 +16,45 @@
     
     <context:annotation-config/>
   
-    <bean class="net.paulgray.mockrest.MockCourseService"/>
-    <bean class="net.paulgray.mockrest.MockEnrollmentService"/>
-    <bean class="net.paulgray.mockrest.MockUserService"/>
+    <bean class="net.paulgray.mockrest.user.MockUserService"/>
+    <!--
     <bean class="net.paulgray.mockrest.MockAnnouncementService"/>
     <bean class="net.paulgray.mockrest.MockDiscussionService"/>
     <bean class="net.paulgray.mockrest.MockAssignmentService"/>
+    <bean class="net.paulgray.mockrest.MockCourseService"/>
+    -->
     
     <mvc:annotation-driven conversion-service="conversionService"/>
+    
+    
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="org.apache.derby.jdbc.EmbeddedDriver" />
+        <property name="url" value="jdbc:derby:pepper;create=true" />
+        <property name="initialSize" value="5" />
+        <property name="maxActive" value="50" />
+    </bean>
+    
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.DerbyDialect</prop> 
+                <prop key="hibernate.show_sql">true</prop> 
+                <prop key="hibernate.hbm2ddl.auto">update</prop> 
+                <prop key="hibernate.show_sql">true</prop> 
+            </props>
+        </property>
+        <property name="annotatedClasses">
+            <list>
+                <value>net.paulgray.mockrest.user.MockeUser</value>
+            </list>
+        </property>
+    </bean>
+<!--
+    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    -->
+    
     
 </beans>
