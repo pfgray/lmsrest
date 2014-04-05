@@ -12,8 +12,7 @@ import java.util.List;
  *
  * @author pfgray
  */
-public interface AnnouncementService {
-    
+public interface AnnouncementService {   
     
     public List<Announcement> getAnnouncementsForUser(User user);
     

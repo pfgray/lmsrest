@@ -15,7 +15,6 @@ import blackboard.persist.discussionboard.ConferenceDbLoader;
 import blackboard.persist.discussionboard.ForumDbLoader;
 import blackboard.persist.discussionboard.MessageDbLoader;
 import blackboard.persist.discussionboard.UserMsgStateDbPersister;
-import java.util.ArrayList;
 import java.util.HashMap;
 import net.paulgray.bbrest.BlackboardUtilities;
 import net.paulgray.lmsrest.course.Course;
@@ -186,12 +185,16 @@ public class BbDiscussionService implements DiscussionService {
     }
 
     private static BbDiscussionBoard getBbDiscussionBoardForForum(Course course, Forum forum, Id contextUserId) {
-        try {
-            MessageDbLoader messageDbLoader = MessageDbLoader.Default.getInstance();
-            MessageCounts mc = messageDbLoader.loadMessageCountsByForumId(forum.getId(), contextUserId);
-            return new BbDiscussionBoard(forum, course, mc);
-        } catch (PersistenceException ex) {
-            Logger.getLogger(BbDiscussionBoard.class.getName()).log(Level.WARNING, "Could not get Message count for db forum: " + forum.getId().getExternalString(), ex);
+        if (contextUserId != null) {
+            try {
+                MessageDbLoader messageDbLoader = MessageDbLoader.Default.getInstance();
+                MessageCounts mc = messageDbLoader.loadMessageCountsByForumId(forum.getId(), contextUserId);
+                return new BbDiscussionBoard(forum, course, mc);
+            } catch (PersistenceException ex) {
+                Logger.getLogger(BbDiscussionBoard.class.getName()).log(Level.WARNING, "Could not get Message count for db forum: " + forum.getId().getExternalString(), ex);
+                return new BbDiscussionBoard(forum, course, null);
+            }
+        } else {
             return new BbDiscussionBoard(forum, course, null);
         }
     }

@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -27,8 +28,8 @@ public class CourseController {
     CourseService courseService;
 
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity getCourses(@ContextUser User user) {
-        List<Course> courses = courseService.getCoursesForUser(user);
+    public ResponseEntity getCourses(@ContextUser User user, @RequestParam(value = "courseFilter", defaultValue = "") String courseFilter) {
+        List<Course> courses = courseService.getCoursesForUser(user, courseFilter);
         return new ResponseEntity(courses, HttpStatus.OK);
     }
 

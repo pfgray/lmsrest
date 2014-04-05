@@ -5,7 +5,9 @@
 package net.paulgray.bbrest.course;
 
 import blackboard.persist.PersistenceException;
+import blackboard.persist.SearchOperator;
 import blackboard.persist.course.CourseDbLoader;
+import blackboard.persist.course.CourseSearch;
 import net.paulgray.bbrest.BlackboardUtilities;
 import net.paulgray.lmsrest.course.Course;
 import net.paulgray.lmsrest.course.CourseService;
@@ -33,10 +35,32 @@ public class BbCourseService implements CourseService {
     }
 
     @Override
-    public List<Course> getCoursesForUser(User user) {
+    public List<Course> getCoursesForUser(User user, String courseFilter) {
         try {
             CourseDbLoader courseDbLoader = CourseDbLoader.Default.getInstance();
             List<blackboard.data.course.Course> courses = courseDbLoader.loadByUserId(BlackboardUtilities.getIdFromPk(user.getId(), blackboard.data.user.User.class));
+            List<Course> toReturn = new LinkedList<Course>();
+            for(blackboard.data.course.Course course : courses){
+                if(course.getId() != null && course.getCourseId().contains(courseFilter)){
+                    toReturn.add(new BbCourse(course, BlackboardUtilities.getIdFromPk(user.getId(), blackboard.data.user.User.class)));
+                }
+            }
+            return toReturn;
+        } catch (PersistenceException ex) {
+            Logger.getLogger(BbCourseService.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+    /*
+    public List<Course> getCoursesByCourseSearch(User user, String courseFilter, int page, int pageSize){
+        try {
+            CourseDbLoader courseDbLoader = CourseDbLoader.Default.getInstance();
+            List<blackboard.data.course.Course> courses = courseDbLoader.loadByUserId(BlackboardUtilities.getIdFromPk(user.getId(), blackboard.data.user.User.class));
+            
+            CourseSearch cs = new CourseSearch(page, pageSize, null, null);
+            cs.addSearchParameter(new CourseSearch.SearchParameter(CourseSearch.SearchKey.CourseId, courseFilter, SearchOperator.In));
+            cs.addSearchParameter(new CourseSearch.SearchParameter(CourseSearch.SearchKey.CourseId, courseFilter, SearchOperator.In));
+            
             List<Course> toReturn = new LinkedList<Course>();
             for(blackboard.data.course.Course course : courses){
                 toReturn.add(new BbCourse(course, BlackboardUtilities.getIdFromPk(user.getId(), blackboard.data.user.User.class)));
@@ -47,5 +71,5 @@ public class BbCourseService implements CourseService {
             return null;
         }
     }
-
+*/
 }

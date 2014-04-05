@@ -15,6 +15,6 @@ public interface CourseService {
     
     public Course getCourseForId(String Id);
     
-    public List<Course> getCoursesForUser(User user);
+    public List<Course> getCoursesForUser(User user, String courseFilter);
     
 }

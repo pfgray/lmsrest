@@ -54,7 +54,6 @@ public class BbAssignment extends Assignment {
             this.description = Jsoup.parse(description).text();
         }
         this.weight = li.getWeight();
-
         
     }
 
