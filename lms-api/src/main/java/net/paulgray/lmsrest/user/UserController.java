@@ -4,7 +4,6 @@
  */
 package net.paulgray.lmsrest.user;
 
-import net.paulgray.lmsrest.enrollment.EnrollmentService;
 import net.paulgray.lmsrest.web.ContextUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,8 +24,6 @@ public class UserController {
 
     @Autowired
     UserService userService;
-    @Autowired
-    EnrollmentService enrollmentService;
 
     
     @RequestMapping(method = RequestMethod.GET, produces = "application/json") 
