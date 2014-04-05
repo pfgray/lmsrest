@@ -15,8 +15,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.paulgray.bbrest.BlackboardUtilities;
 import net.paulgray.bbrest.assignment.builder.BbAssignmentBuilder;
 import net.paulgray.bbrest.assignment.builder.BbAssignmentFactory;
@@ -99,11 +97,10 @@ public class BbAssignmentService implements AssignmentService<BbAssignment> {
             Map<String, BbAssignmentFactory> assignmentBuilders = new HashMap<String, BbAssignmentFactory>();
             assignmentBuilders.put(OutcomeDefinitionCategory.ASSIGNMENT.replaceAll("\\.name", ""), new BbAssignmentBuilder());
             assignmentBuilders.put(OutcomeDefinitionCategory.DISCUSSION.replaceAll("\\.name", ""), new DiscussionAssignmentBuilder(courseId));
-
+            
             for (Lineitem li : lineitems) {
-                if (li != null && li.getIsAvailable()) {
-                    //&& li.getAssessmentLocation().equals(Lineitem.AssessmentLocation.INTERNAL)){
-                    //&& acceptedAssignmentTypes.contains(li.getOutcomeDefinition().getCategory().getTitle())){
+                if (li != null && li.getIsAvailable()
+                    && acceptedAssignmentTypes.contains(li.getOutcomeDefinition().getCategory().getTitle())){
                     System.out.println("****checking factories for: " + li.getOutcomeDefinition().getCategory().getTitle());
                     BbAssignmentFactory factory = assignmentBuilders.get(li.getOutcomeDefinition().getCategory().getTitle());
                     if (factory == null) {
