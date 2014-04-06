@@ -43,8 +43,7 @@
     <context:component-scan base-package="net.paulgray.lmsrest.people" />
     <context:component-scan base-package="net.paulgray.lmsrest.grades" />
     <context:component-scan base-package="net.paulgray.bbrest.web" />
-    
-    <!--
+   
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
         <property name="basenames">
             <list>
@@ -53,8 +52,7 @@
         </property>
         <property name="cacheSeconds" value="30" />
     </bean>
-    -->
-    <!--
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver"/>
     <bean id="restExceptionResolver" class="com.stormpath.spring.web.servlet.handler.RestExceptionHandler">
         <property name="order" value="100"></property>
         <property name="errorResolver">
@@ -64,7 +62,7 @@
                 <property name="exceptionMappingDefinitions">
                     <map>
                         <entry key="org.springframework.security.access.AccessDeniedException" value="403, error.access_denied"></entry>
-                        <entry key="org.springframework.security.authentication.AuthenticationCredentialsNotFoundException" value="403, error.missing_credentials"></entry>
+                        <entry key="org.springframework.security.authentication.AuthenticationCredentialsNotFoundException" value="401, error.missing_credentials"></entry>
                         
                         <entry key="Throwable" value="500, error.internal"></entry>
                     </map>
@@ -72,5 +70,5 @@
             </bean>
         </property>
     </bean>
-    -->
+    
 </beans>
