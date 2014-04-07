@@ -26,6 +26,7 @@ import net.paulgray.lmsrest.assignment.AssignmentService;
 import net.paulgray.lmsrest.course.Course;
 import net.paulgray.lmsrest.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 /**
@@ -82,6 +83,9 @@ public class BbAssignmentService implements AssignmentService<BbAssignment> {
 
     public List<BbAssignment> getAssignments(User user, Course course) {
         try {
+            if (!BbCourseService.currentUserCanViewCourse(course.getId())) {
+                throw new AccessDeniedException("User cannot view course: " + course.getId());
+            }
 //            LineitemDbLoader lineItemDbLoader = LineitemDbLoader.Default.getInstance();
 //            List<Lineitem> lineitems = lineItemDbLoader.loadByCourseId(BlackboardUtilities.getIdFromPk(course.getId(), blackboard.data.course.Course.class));
 //            ContentDbLoader contentDbLoader = ContentDbLoader.Default.getInstance();
@@ -97,10 +101,10 @@ public class BbAssignmentService implements AssignmentService<BbAssignment> {
             Map<String, BbAssignmentFactory> assignmentBuilders = new HashMap<String, BbAssignmentFactory>();
             assignmentBuilders.put(OutcomeDefinitionCategory.ASSIGNMENT.replaceAll("\\.name", ""), new BbAssignmentBuilder());
             assignmentBuilders.put(OutcomeDefinitionCategory.DISCUSSION.replaceAll("\\.name", ""), new DiscussionAssignmentBuilder(courseId));
-            
+
             for (Lineitem li : lineitems) {
                 if (li != null && li.getIsAvailable()
-                    && acceptedAssignmentTypes.contains(li.getOutcomeDefinition().getCategory().getTitle())){
+                        && acceptedAssignmentTypes.contains(li.getOutcomeDefinition().getCategory().getTitle())) {
                     System.out.println("****checking factories for: " + li.getOutcomeDefinition().getCategory().getTitle());
                     BbAssignmentFactory factory = assignmentBuilders.get(li.getOutcomeDefinition().getCategory().getTitle());
                     if (factory == null) {

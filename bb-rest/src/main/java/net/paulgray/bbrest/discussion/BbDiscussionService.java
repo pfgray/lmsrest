@@ -28,8 +28,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.paulgray.bbrest.course.BbCourseService;
 import net.paulgray.bbrest.user.BbUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 
 /**
  *
@@ -41,6 +43,9 @@ public class BbDiscussionService implements DiscussionService {
     BbUserService bbUserService;
 
     public List<DiscussionBoard> getDiscussionBoardsForCourseAndUser(Course course, User user) {
+        if (!BbCourseService.currentUserCanViewCourse(course.getId())) {
+            throw new AccessDeniedException("User cannot view course: " + course.getId());
+        }
         try {
             ForumDbLoader forumDbLoader = ForumDbLoader.Default.getInstance();
             ConferenceDbLoader conferenceDbLoader = ConferenceDbLoader.Default.getInstance();
@@ -61,11 +66,15 @@ public class BbDiscussionService implements DiscussionService {
 
     public List<DiscussionThread> getDiscussionThreadsForBoard(DiscussionBoard board, User user) {
         try {
+            if(!currentUserCanViewDiscussionBoard(board.getId())){
+                throw new AccessDeniedException("User cannot view Discussion Board: " + board.getId());
+            }
+            
             MessageDbLoader messageDbLoader = MessageDbLoader.Default.getInstance();
 
             Id forumId = BlackboardUtilities.getIdFromPk(board.getId(), blackboard.data.discussionboard.Forum.class);
             Id userId = BlackboardUtilities.getIdFromPk(user.getId(), blackboard.data.user.User.class);
-            //List<Message> messages = messageDbLoader.loadMessagesByForumIdWithStatus(forumId, userId, false, false, false, false);
+
             List<Message> messages = messageDbLoader.loadTopThreadsWithStatusAndCountsByForumId(forumId, userId, false, false, false);
 
             List<DiscussionThread> discussionThreads = new LinkedList<DiscussionThread>();
@@ -83,8 +92,12 @@ public class BbDiscussionService implements DiscussionService {
 
     public List<DiscussionPost> getDiscussionPostsForThread(DiscussionThread discussionThread, User user) {
         try {
+            if(!currentUserCanViewDiscussionThread(discussionThread.getId())){
+                throw new AccessDeniedException("User cannot view Discussion Thread: " + discussionThread.getId());
+            }
+            
             MessageDbLoader messageDbLoader = MessageDbLoader.Default.getInstance();
-            //Message thread = messageDbLoader.loadById(BlackboardUtilities.getIdFromPk(discussionThread.getId(), blackboard.data.discussionboard.Message.class), null, false, true);
+
             final Id threadId = BlackboardUtilities.getIdFromPk(discussionThread.getId(), blackboard.data.discussionboard.Message.class);
             final Id userId = BlackboardUtilities.getIdFromPk(user.getId(), blackboard.data.user.User.class);
             final List<Message> replies = messageDbLoader.loadMessageThreadWithStatus(threadId, userId, false, true, true);
@@ -200,7 +213,9 @@ public class BbDiscussionService implements DiscussionService {
     }
 
     private class LocalCachedBbUserService {
+
         public Map<String, User> users = new HashMap<String, User>();
+
         public User getUserForId(String userId) {
             if (userId != null) {
                 if (!users.containsKey(userId)) {
@@ -213,6 +228,26 @@ public class BbDiscussionService implements DiscussionService {
         }
     }
 
+    public static Boolean currentUserCanViewDiscussionBoard(String dbId) throws PersistenceException {
+
+        Id forumId = BlackboardUtilities.getIdFromPk(dbId, blackboard.data.discussionboard.Forum.class);
+        
+        Forum forum = ForumDbLoader.Default.getInstance().loadById(forumId);
+        Conference conf = ConferenceDbLoader.Default.getInstance().loadById(forum.getConferenceId());
+        return BbCourseService.currentUserCanViewCourse(conf.getCourseId().getExternalString());
+    }
+
+    private boolean currentUserCanViewDiscussionThread(String threadId) throws PersistenceException {
+        
+        Id messageId = BlackboardUtilities.getIdFromPk(threadId, blackboard.data.discussionboard.Forum.class);
+        
+        Message message = MessageDbLoader.Default.getInstance().loadById(messageId);
+        Forum forum = ForumDbLoader.Default.getInstance().loadById(message.getId());
+        Conference conf = ConferenceDbLoader.Default.getInstance().loadById(forum.getConferenceId());
+        
+        return BbCourseService.currentUserCanViewCourse(conf.getCourseId().getExternalString());
+    }
+    
     /*
      public DiscussionThread insertDiscussionThreadForDiscussionBoardAndUser(DiscussionBoard discussionBoard, DiscussionThread discussionThread, User user) {
      try {

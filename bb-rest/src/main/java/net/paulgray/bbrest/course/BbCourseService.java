@@ -21,7 +21,6 @@ import net.paulgray.bbrest.discussion.BbDiscussionBoard;
 import net.paulgray.bbrest.discussion.BbDiscussionService;
 import net.paulgray.lmsrest.discussion.DiscussionBoard;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
@@ -36,9 +35,6 @@ public class BbCourseService implements CourseService {
     @Override
     public Course getCourseForId(String id) {
         try {
-            if(!currentUserCanViewCourse(id)){
-                throw new AccessDeniedException("User cannot view course: " + id);
-            }
             CourseDbLoader courseDbLoader = CourseDbLoader.Default.getInstance();
             return new BbCourse(courseDbLoader.loadById(BlackboardUtilities.getIdFromPk(id, blackboard.data.course.Course.class)));
         } catch (PersistenceException ex) {
@@ -81,7 +77,6 @@ public class BbCourseService implements CourseService {
         } else {
             return true;
         }
-
     }
     /*
      public List<Course> getCoursesByCourseSearch(User user, String courseFilter, int page, int pageSize){

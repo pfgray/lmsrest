@@ -18,6 +18,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.springframework.security.access.AccessDeniedException;
 
 /**
  *
@@ -41,12 +42,15 @@ public class BbEnrollmentService implements EnrollmentService {
     @Override
     public List<Enrollment> getEnrollmentsForCourse(Course course) {
         try {
+            if (!BbCourseService.currentUserCanViewCourse(course.getId())) {
+                throw new AccessDeniedException("User cannot view course: " + course.getId());
+            }
             EnrollmentLoader enrollmentDbLoader = EnrollmentDbLoader.Default.getInstance();
             blackboard.admin.data.course.Enrollment template = new blackboard.admin.data.course.Enrollment();
             template.setCourseId(BlackboardUtilities.getIdFromPk(course.getId(), blackboard.data.course.Course.class));
             List<blackboard.admin.data.course.Enrollment> enrollments = enrollmentDbLoader.load(template);
             List<Enrollment> toReturn = new LinkedList<Enrollment>();
-            for(blackboard.admin.data.course.Enrollment enrollment : enrollments){
+            for (blackboard.admin.data.course.Enrollment enrollment : enrollments) {
                 toReturn.add(new BbEnrollment(enrollment));
             }
             return toReturn;
@@ -64,7 +68,7 @@ public class BbEnrollmentService implements EnrollmentService {
             template.setUserId(BlackboardUtilities.getIdFromPk(user.getId(), blackboard.data.user.User.class));
             List<blackboard.admin.data.course.Enrollment> enrollments = enrollmentDbLoader.load(template);
             List<Enrollment> toReturn = new LinkedList<Enrollment>();
-            for(blackboard.admin.data.course.Enrollment enrollment : enrollments){
+            for (blackboard.admin.data.course.Enrollment enrollment : enrollments) {
                 toReturn.add(new BbEnrollment(enrollment));
             }
             return toReturn;
@@ -73,5 +77,5 @@ public class BbEnrollmentService implements EnrollmentService {
             return null;
         }
     }
-    
+
 }

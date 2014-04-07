@@ -63,6 +63,7 @@
                     <map>
                         <entry key="org.springframework.security.access.AccessDeniedException" value="403, error.access_denied"></entry>
                         <entry key="org.springframework.security.authentication.AuthenticationCredentialsNotFoundException" value="401, error.missing_credentials"></entry>
+                        <entry key="net.paulgray.lmsrest.web.NoContextUserException" value="401, error.missing_credentials"></entry> 
                         
                         <entry key="Throwable" value="500, error.internal"></entry>
                     </map>

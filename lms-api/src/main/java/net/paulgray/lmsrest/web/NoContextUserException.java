@@ -4,11 +4,13 @@
  */
 package net.paulgray.lmsrest.web;
 
+import org.springframework.security.core.AuthenticationException;
+
 /**
  *
  * @author pfgray
  */
-public class NoContextUserException extends Exception{
+public class NoContextUserException extends AuthenticationException {
 
     public NoContextUserException(String message) {
         super(message);

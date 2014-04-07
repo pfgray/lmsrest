@@ -15,10 +15,12 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.paulgray.bbrest.BlackboardUtilities;
+import net.paulgray.bbrest.course.BbCourseService;
 import net.paulgray.lmsrest.course.Course;
 import net.paulgray.lmsrest.grades.Grade;
 import net.paulgray.lmsrest.grades.GradesService;
 import net.paulgray.lmsrest.user.User;
+import org.springframework.security.access.AccessDeniedException;
 
 /**
  *
@@ -32,6 +34,10 @@ public class BbGradesService implements GradesService {
 
     public List<Grade> getGradesForUserAndCourse(User user, Course course) {
         try {
+            if (!BbCourseService.currentUserCanViewCourse(course.getId())) {
+                throw new AccessDeniedException("User cannot view course: " + course.getId());
+            }
+
             CourseMembershipDbLoader courseMembershipDbLoader = CourseMembershipDbLoader.Default.getInstance();
 
             CourseMembership courseMembership = courseMembershipDbLoader.loadByCourseAndUserId(
@@ -41,7 +47,7 @@ public class BbGradesService implements GradesService {
             if (courseMembership != null) {
                 ScoreDbLoader scoreDbLoader = ScoreDbLoader.Default.getInstance();
                 List<Score> scores = scoreDbLoader.loadByCourseMembershipId(courseMembership.getId());
-                for(Score score : scores){
+                for (Score score : scores) {
                     grades.add(new BbGrade(score, course));
                 }
             }
