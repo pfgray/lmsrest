@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "username": "pfgray",
+        "firstName": "Paul",
+        "lastName": "Gray",
+        "mi": "F",
+        "lastLogin": 1396918898389,
+        "birthDate": 600238800000,
+        "systemRole": "Administrator",
+        "email": "pfbgray@gmail.com",
+        "locale": "en/US"
+    },
+    {
+        "id": 2,
+        "username": "ndgray",
+        "firstName": "Nicole",
+        "lastName": "Gray",
+        "mi": "D",
+        "lastLogin": 1396918898389,
+        "birthDate": 671688000000,
+        "systemRole": "Instructor",
+        "email": "ngray8611@gmail.com",
+        "locale": "en/US"
+    }
+]

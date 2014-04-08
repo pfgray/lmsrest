@@ -5,7 +5,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
                         http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
-    <security:http auto-config="true" entry-point-ref="preAuthenticatedProcessingFilterEntryPoint">
+    <security:http auto-config="true" entry-point-ref="preAuthenticatedProcessingFilterEntryPoint" use-expressions="true">
+        <security:intercept-url pattern="/*" access="isAuthenticated()"/>
         <security:session-management session-fixation-protection="none" />
         <security:custom-filter after="PRE_AUTH_FILTER" ref="blackboardPreAuthenticatedProcessingFilter"/>
         <security:anonymous/>
@@ -40,9 +41,5 @@
     <bean id="preAuthenticatedProcessingFilterEntryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint"/>
 
     <bean id="servletContext" class="org.springframework.web.context.support.ServletContextFactoryBean"/>
- 
-    <bean id="restrictCourseViewFilterBean" class="net.paulgray.bbrest.security.CourseFilter"/>
-    
-
     
 </beans>

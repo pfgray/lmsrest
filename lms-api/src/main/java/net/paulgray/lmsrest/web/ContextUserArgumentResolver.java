@@ -24,12 +24,7 @@ public class ContextUserArgumentResolver implements HandlerMethodArgumentResolve
 
     @Override
     public boolean supportsParameter(MethodParameter mp) {
-        if (!mp.hasParameterAnnotation(ContextUser.class)) {
-            return false;
-        } else {
-
-            return true;
-        }
+        return mp.hasParameterAnnotation(ContextUser.class);
     }
 
     @Override
