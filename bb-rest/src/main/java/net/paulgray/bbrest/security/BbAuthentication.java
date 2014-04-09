@@ -20,33 +20,44 @@ public class BbAuthentication implements Authentication{
     private boolean authenticated;
     
     public BbAuthentication(User user){
-        this.user = user;
+        if(user != null){
+            System.out.println("Got user: " + user.getUsername());
+            this.user = user;
+            this.authenticated = true;
+        }
     }
-
+    
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return new LinkedList<GrantedAuthority>();
     }
 
+    @Override
     public Object getCredentials() {
         return this.user;
     }
 
+    @Override
     public Object getDetails() {
         return this.user;
     }
 
+    @Override
     public Object getPrincipal() {
         return user;
     }
 
+    @Override
     public boolean isAuthenticated() {
         return this.authenticated;
     }
 
+    @Override
     public void setAuthenticated(boolean bln) throws IllegalArgumentException {
         this.authenticated = bln;
     }
 
+    @Override
     public String getName() {
         return user.getUsername();
     }

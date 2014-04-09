@@ -4,6 +4,7 @@
  */
 package net.paulgray.bbrest.security;
 
+import java.util.logging.Logger;
 import net.paulgray.lmsrest.user.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider;
