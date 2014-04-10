@@ -6,7 +6,6 @@
 
 package net.paulgray.lmsrest.grades;
 
-import java.util.List;
 import net.paulgray.lmsrest.course.Course;
 import net.paulgray.lmsrest.course.CourseController;
 import net.paulgray.lmsrest.user.User;
@@ -18,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -32,8 +32,8 @@ public class GradesController {
     GradesService gradesService;
 
     @RequestMapping(value = GradesController.PATH, method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity getAnnouncements(@ContextUser User user) {
-        return new ResponseEntity(gradesService.getGradesForUser(user),HttpStatus.OK);
+    public ResponseEntity getAnnouncements(@ContextUser User user, @RequestParam(value = "courseFilter", defaultValue = "") String courseFilter) {
+        return new ResponseEntity(gradesService.getGradesForUser(user, courseFilter),HttpStatus.OK);
     }
     
     @RequestMapping(method = RequestMethod.GET, produces = "application/json", value = CourseController.PATH + "/{course}/" + GradesController.PATH)

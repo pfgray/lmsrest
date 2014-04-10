@@ -16,7 +16,7 @@ import net.paulgray.lmsrest.user.User;
  */
 public interface GradesService {
     
-    public List<Grade> getGradesForUser(User user);
+    public List<Grade> getGradesForUser(User user, String courseFilter);
     
     public List<Grade> getGradesForUserAndCourse(User user, Course course);
     

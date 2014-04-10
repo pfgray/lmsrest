@@ -14,10 +14,10 @@ import net.paulgray.lmsrest.course.Course;
 import net.paulgray.lmsrest.user.User;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.paulgray.bbrest.course.BbCourseService;
+import net.paulgray.bbrest.course.LocalCachedBbCourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +41,7 @@ public class BbAnnouncementService implements AnnouncementService {
             AnnouncementDbLoader announcementDbLoader = AnnouncementDbLoader.Default.getInstance();
             List<blackboard.data.announcement.Announcement> announcements = announcementDbLoader.loadAvailableByUserId(BlackboardUtilities.getIdFromPk(user.getId(), blackboard.data.user.User.class));
             List<Announcement> toReturn = new LinkedList<Announcement>();
-            LocalCachedBbCourseService courseService = new LocalCachedBbCourseService();
+            LocalCachedBbCourseService courseService = new LocalCachedBbCourseService(bbCourseService);
             for (blackboard.data.announcement.Announcement a : announcements) {
                 toReturn.add(new BbAnnouncement(a, courseService.getCourseForId(a.getId().getExternalString())));
             }
@@ -83,19 +83,6 @@ public class BbAnnouncementService implements AnnouncementService {
             Logger.getLogger(BbAnnouncementService.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
-    }
-    
-    private class LocalCachedBbCourseService {
-        
-        public Map<String, Course> courses;
-        
-        public Course getCourseForId(String courseId){
-            if(!courses.containsKey(courseId)){
-                courses.put(courseId, bbCourseService.getCourseForId(courseId));
-            }
-            return courses.get(courseId);
-        }
-        
     }
 
 }

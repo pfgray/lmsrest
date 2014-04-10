@@ -19,21 +19,49 @@ public class BbPerson extends Person {
     public String department;
     public String uniqueId;
 
-    public BbPerson(User user) {
+    public BbPerson(User user, String role) {
         //standard info
-        this.id = user.getId().getExternalString();
-        this.given_name = user.getGivenName();
-        this.family_name = user.getFamilyName();
-        this.username = user.getUserName();
-        this.email = user.getEmailAddress();
-        this.role = user.getPortalRole() != null ? user.getPortalRole().getRoleName() : null;
+        if(user != null){
+            this.id = user.getId().getExternalString();
+            this.given_name = user.getGivenName();
+            this.family_name = user.getFamilyName();
+            this.username = user.getUserName();
+            this.email = user.getEmailAddress();
+            this.role = role;
 
-        //bb info
-        this.department = user.getDepartment();
-        this.address = user.getStreet1() + " " + user.getStreet2() + ", " + user.getCity() + ", " + user.getState() + " " + user.getZipCode();
-        this.phone = user.getMobilePhone();
-        this.uniqueId = user.getStudentId();
+            //bb info
+            this.department = user.getDepartment();
+            this.address = user.getStreet1() + " " + user.getStreet2() + ", " + user.getCity() + ", " + user.getState() + " " + user.getZipCode();
+            this.phone = user.getMobilePhone();
+            this.uniqueId = user.getStudentId();
+        }
 
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 53 * hash + (this.username != null ? this.username.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final BbPerson other = (BbPerson) obj;
+        if ((this.username == null) ? (other.username != null) : !this.username.equals(other.username)) {
+            return false;
+        }
+        return true;
+    }
+
+    
+    
+    
 
 }

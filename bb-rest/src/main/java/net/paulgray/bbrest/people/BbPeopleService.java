@@ -5,11 +5,16 @@
  */
 package net.paulgray.bbrest.people;
 
+import blackboard.data.course.CourseMembership;
 import blackboard.data.user.User;
 import blackboard.persist.PersistenceException;
+import blackboard.persist.course.CourseMembershipDbLoader;
 import blackboard.persist.user.UserDbLoader;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.paulgray.bbrest.BlackboardUtilities;
@@ -29,14 +34,23 @@ public class BbPeopleService implements PeopleService {
             if (!BbCourseService.currentUserCanViewCourse(courseId)) {
                 throw new AccessDeniedException("User cannot view course: " +courseId);
             }
-
-            List<Person> people = new LinkedList<Person>();
+            
+            Set<Person> people = new HashSet<Person>();
             UserDbLoader userDbLoader = UserDbLoader.Default.getInstance();
+            
             List<User> users = userDbLoader.loadByCourseId(BlackboardUtilities.getIdFromPk(courseId, blackboard.data.course.Course.class));
-            for (User user : users) {
-                people.add(new BbPerson(user));
+            List<CourseMembership> courseMemberships = CourseMembershipDbLoader.Default.getInstance().loadByCourseIdWithUserInfo(BlackboardUtilities.getIdFromPk(courseId, blackboard.data.course.Course.class));
+            
+            for (CourseMembership enrollment : courseMemberships) {
+                if(enrollment.getRole() != null){
+                    for(User user : users){
+                        if(user.getId().equals(enrollment.getUserId())){
+                            people.add(new BbPerson(user, enrollment.getRole().getFieldName()));
+                        }
+                    }
+                }
             }
-            return people;
+            return new ArrayList(people);
         } catch (PersistenceException ex) {
             Logger.getLogger(BbPeopleService.class.getName()).log(Level.SEVERE, null, ex);
             return new LinkedList<Person>();
