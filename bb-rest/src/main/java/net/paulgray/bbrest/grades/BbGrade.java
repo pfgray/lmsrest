@@ -21,7 +21,7 @@ import net.paulgray.lmsrest.grades.Grade;
  */
 public class BbGrade extends Grade {
 
-    public String assessmentType;
+    public String category;
     
     public Date created;
     public Date updated;
@@ -49,7 +49,7 @@ public class BbGrade extends Grade {
             this.max = lineitem.getPointsPossible();
             this.title = lineitem.getName();
             if (lineitem.getOutcomeDefinition() != null && lineitem.getOutcomeDefinition().getCategory() != null) {
-                this.assessmentType = lineitem.getOutcomeDefinition().getCategory().getTitle();
+                this.category = lineitem.getOutcomeDefinition().getCategory().getTitle();
             }
             
         } catch (PersistenceException ex) {
