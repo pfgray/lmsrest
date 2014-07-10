@@ -17,7 +17,7 @@ import net.paulgray.lmsrest.user.User;
  */
 @Entity
 @Table(name = "user")
-public class MockUser  extends User {
+public class MockUser extends User {
 
     @Id
     @Column(name = "id")
@@ -30,7 +30,5 @@ public class MockUser  extends User {
     protected String lastName;
     @Column(name = "mi")
     protected String mi;
-    
-    
 
 }
