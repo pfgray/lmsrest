@@ -24,35 +24,10 @@ public class UserController {
 
     @Autowired
     UserService userService;
-
     
-    @RequestMapping(method = RequestMethod.GET, produces = "application/json") 
-    public ResponseEntity getUser(@ContextUser User user) {
+    @RequestMapping(method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity getCurrentUser(@ContextUser User user) {
         return new ResponseEntity(user, HttpStatus.OK);
     }
-    
-    
-    //we should move these controller methods to a different java package and secure them differently, as they are essentially 'admin' functions 
-    /*
-    @RequestMapping(method = RequestMethod.GET, value = "/{userId}", produces = "application/json")
-    public ResponseEntity getUser(ModelMap model, @PathVariable String userId) {
-        User user = userService.getUserForId(userId);
-        if (user == null) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<UserResource>(userResourceAssembler.toResource(user), HttpStatus.OK);
-        }
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/{userId}/enrollments", produces = "application/json")
-    public ResponseEntity getEnrollments(ModelMap model, @PathVariable String userId) {
-        User user = userService.getUserForId(userId);
-        if (user == null) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
-        }
-        List<Enrollment> enrollments = enrollmentService.getEnrollmentsForUser(user);
-        return new ResponseEntity<List<EnrollmentResource>>(enrollmentResourceAssembler.toResources(enrollments), HttpStatus.OK);
-    }
-    * */
 
 }

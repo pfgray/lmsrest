@@ -8,8 +8,11 @@ package net.paulgray.mockrest.user;
 
 import net.paulgray.lmsrest.user.User;
 import net.paulgray.lmsrest.user.UserService;
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -20,8 +23,11 @@ public class MockUserService implements UserService {
     @Autowired
     SessionFactory sessionFactory;
 
-    public User getUserForId(String Id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    @Transactional
+    public User getUserForId(String id) {
+        Criteria crit = sessionFactory.getCurrentSession().createCriteria(MockUser.class);
+        crit.add(Restrictions.eq("id", id));
+        return (MockUser) crit.uniqueResult();
     }
     
 }

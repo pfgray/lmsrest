@@ -16,12 +16,12 @@
     
     <!--<security:global-method-security />-->
     
-    <mvc:annotation-driven conversion-service="conversionService">
+    <mvc:annotation-driven >
         <mvc:argument-resolvers>
             <bean class="net.paulgray.mockrest.MockUserArgumentResolver"/>
         </mvc:argument-resolvers>
         <mvc:message-converters>
-            <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"/>
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
         </mvc:message-converters>
     </mvc:annotation-driven>
    

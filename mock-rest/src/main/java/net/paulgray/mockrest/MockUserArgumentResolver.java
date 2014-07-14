@@ -20,6 +20,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 public class MockUserArgumentResolver extends ContextUserArgumentResolver {
     @Override
     public Object resolveArgument(MethodParameter mp, ModelAndViewContainer mavc, NativeWebRequest nwr, WebDataBinderFactory wdbf) throws Exception {
-        return new User("id", "pfgray", "Paul", "Gray", "F", null, null, null, null, null);
+        //get the authentication from spring's context
+        return new User();//"id", "pfgray", "Paul", "Gray", "F", null, null, null, null, null);
     }
 }
