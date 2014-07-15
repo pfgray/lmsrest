@@ -8,6 +8,7 @@ import net.paulgray.lmsrest.user.User;
 import net.paulgray.lmsrest.user.UserService;
 import net.paulgray.lmsrest.web.ContextUser;
 import java.util.List;
+import net.paulgray.lmsrest.web.LmsRestConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @author pfgray
  */
 @Controller
-@RequestMapping(value = "/enrollments")
+@RequestMapping("/" + LmsRestConstants.API_PREFIX + "/enrollments")
 public class EnrollmentController {
 
     @Autowired

@@ -10,11 +10,13 @@ import java.util.List;
 import net.paulgray.lmsrest.assignment.AssignmentService;
 import net.paulgray.lmsrest.course.Course;
 import net.paulgray.lmsrest.user.User;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author paul
  */
+@Component
 public class MockAssignmentService implements AssignmentService{
 
     public List getAssignments(User user, String courseFilter) {

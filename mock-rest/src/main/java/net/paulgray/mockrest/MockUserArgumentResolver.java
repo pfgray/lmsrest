@@ -9,6 +9,7 @@ package net.paulgray.mockrest;
 import net.paulgray.lmsrest.user.User;
 import net.paulgray.lmsrest.web.ContextUserArgumentResolver;
 import org.springframework.core.MethodParameter;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.ModelAndViewContainer;
@@ -17,10 +18,11 @@ import org.springframework.web.method.support.ModelAndViewContainer;
  *
  * @author paul
  */
+@Component
 public class MockUserArgumentResolver extends ContextUserArgumentResolver {
     @Override
     public Object resolveArgument(MethodParameter mp, ModelAndViewContainer mavc, NativeWebRequest nwr, WebDataBinderFactory wdbf) throws Exception {
         //get the authentication from spring's context
-        return new User();//"id", "pfgray", "Paul", "Gray", "F", null, null, null, null, null);
+        return new User("id", "pfgray", "Paul", "Gray", "F", null, null, null, null, null);
     }
 }

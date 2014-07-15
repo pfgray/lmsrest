@@ -13,11 +13,13 @@ import net.paulgray.lmsrest.course.Course;
 import net.paulgray.lmsrest.enrollment.Enrollment;
 import net.paulgray.lmsrest.enrollment.EnrollmentService;
 import net.paulgray.lmsrest.user.User;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author paul
  */
+@Component
 public class MockEnrollmentService implements EnrollmentService {
 
     public Enrollment getEnrollmentForId(String id) {

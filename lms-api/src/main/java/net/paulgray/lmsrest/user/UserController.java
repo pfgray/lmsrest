@@ -5,6 +5,7 @@
 package net.paulgray.lmsrest.user;
 
 import net.paulgray.lmsrest.web.ContextUser;
+import net.paulgray.lmsrest.web.LmsRestConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @author pfgray
  */
 @Controller
-@RequestMapping(value = "/" + UserController.PATH)
 public class UserController {
     
     public static final String PATH = "user";
@@ -25,7 +25,7 @@ public class UserController {
     @Autowired
     UserService userService;
     
-    @RequestMapping(method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/" + LmsRestConstants.API_PREFIX + "/" + UserController.PATH, method = RequestMethod.GET)
     public ResponseEntity getCurrentUser(@ContextUser User user) {
         return new ResponseEntity(user, HttpStatus.OK);
     }

@@ -11,11 +11,13 @@ import net.paulgray.lmsrest.announcement.Announcement;
 import net.paulgray.lmsrest.announcement.AnnouncementService;
 import net.paulgray.lmsrest.course.Course;
 import net.paulgray.lmsrest.user.User;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author paul
  */
+@Component
 public class MockAnnouncementService implements AnnouncementService{
 
     public List<Announcement> getAnnouncementsForUser(User user) {

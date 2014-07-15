@@ -10,6 +10,7 @@ import net.paulgray.lmsrest.course.Course;
 import net.paulgray.lmsrest.course.CourseController;
 import net.paulgray.lmsrest.user.User;
 import net.paulgray.lmsrest.web.ContextUser;
+import net.paulgray.lmsrest.web.LmsRestConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @author paul
  */
 @Controller
+@RequestMapping(value = "/" + LmsRestConstants.API_PREFIX + "/" + CourseController.PATH + "/{course}/" + PeopleController.PATH)
 public class PeopleController {
     
     public static final String PATH = "people";
@@ -30,7 +32,7 @@ public class PeopleController {
     @Autowired
     PeopleService peopleService;
     
-    @RequestMapping(method = RequestMethod.GET, produces = "application/json", value = CourseController.PATH + "/{course}/" + PeopleController.PATH)
+    @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity getAssignmentsForCourse(@ContextUser User user, @PathVariable Course course) {
         return new ResponseEntity(peopleService.getPeopleForUserAndCourse(user.getId(), course.getId()), HttpStatus.OK);
     }

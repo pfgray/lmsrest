@@ -13,11 +13,13 @@ import net.paulgray.lmsrest.discussion.DiscussionPost;
 import net.paulgray.lmsrest.discussion.DiscussionService;
 import net.paulgray.lmsrest.discussion.DiscussionThread;
 import net.paulgray.lmsrest.user.User;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author paul
  */
+@Component
 public class MockDiscussionService implements DiscussionService {
 
     public List<DiscussionBoard> getDiscussionBoardsForCourseAndUser(Course course, User user) {

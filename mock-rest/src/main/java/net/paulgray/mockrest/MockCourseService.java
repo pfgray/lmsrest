@@ -9,11 +9,13 @@ import java.util.List;
 import net.paulgray.lmsrest.course.Course;
 import net.paulgray.lmsrest.course.CourseService;
 import net.paulgray.lmsrest.user.User;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author paul
  */
+@Component
 public class MockCourseService implements CourseService {
 
     public Course getCourseForId(String Id) {
