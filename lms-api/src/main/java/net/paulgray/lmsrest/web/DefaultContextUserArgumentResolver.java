@@ -8,6 +8,7 @@ import net.paulgray.lmsrest.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -17,7 +18,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
  *
  * @author pfgray
  */
-public class ContextUserArgumentResolver implements HandlerMethodArgumentResolver {
+public class DefaultContextUserArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Autowired
     UserService userService;
@@ -33,16 +34,23 @@ public class ContextUserArgumentResolver implements HandlerMethodArgumentResolve
         try {
             SecurityContextHolder.getContext().getAuthentication().getAuthorities();
             Object o = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if (o.getClass().equals(java.lang.String.class) && ((String) o).equals("anonymmousUser")) {
+            System.out.println("resolving user:" + o);
+            if (o.getClass().equals(java.lang.String.class) && ((String) o).equals("anonymousUser")) {
+                System.out.println("got anonymous");
                 if (required) {
                     throw new NoContextUserException("Context User not found but required.");
                 } else {
                     return null;
                 }
+            } else if (o instanceof org.springframework.security.core.userdetails.User) {
+                System.out.println("got user:" + ((User) o).getUsername());
+                return userService.getUserForUsername(((User) o).getUsername());
             } else {
-                return o;
+                System.out.println("The user principal returned from Spring's context authentication was not a String containing 'anonymousUser' or an instance of 'org.springframework.security.core.userdetails.User'.");
+                throw new RuntimeException("The user principal returned from Spring's context authentication was not a String containing 'anonymousUser' or an instance of 'org.springframework.security.core.userdetails.User'.");
             }
         } catch (Exception e) {
+            System.out.println("Caught exception: " + e);
             if (required) {
                 throw new NoContextUserException("Context User not found but required.");
             } else {

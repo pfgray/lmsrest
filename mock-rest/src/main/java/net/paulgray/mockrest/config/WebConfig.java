@@ -7,7 +7,8 @@
 package net.paulgray.mockrest.config;
 
 import java.util.List;
-import net.paulgray.mockrest.MockUserArgumentResolver;
+import net.paulgray.lmsrest.web.DefaultContextUserArgumentResolver;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -18,10 +19,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  */
 @Configuration
 public class WebConfig extends WebMvcConfigurerAdapter {
+    
+    @Autowired
+    DefaultContextUserArgumentResolver defaultContextUserArgumentResolver;
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-        argumentResolvers.add(new MockUserArgumentResolver());
+        argumentResolvers.add(defaultContextUserArgumentResolver);
         super.addArgumentResolvers(argumentResolvers); //To change body of generated methods, choose Tools | Templates.
     }
     

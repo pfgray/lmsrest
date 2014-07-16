@@ -12,4 +12,6 @@ public interface UserService {
     
     public User getUserForId(String Id);
     
+    public User getUserForUsername(String username);
+    
 }

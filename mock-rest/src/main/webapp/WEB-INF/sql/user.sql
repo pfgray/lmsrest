@@ -10,3 +10,4 @@ create table users (
 
 insert into users (id, username, first_name, last_name, mi) values ('1', 'gwashington', 'George', 'Washington', 'R');
 insert into users (id, username, first_name, last_name, mi) values ('2', 'jadams', 'John', 'Adams', 'Q');
+insert into users (id, username, first_name, last_name)     values ('3', 'tjefferson', 'Thomas', 'Jefferson');

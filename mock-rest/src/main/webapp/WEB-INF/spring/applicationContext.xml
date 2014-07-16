@@ -40,7 +40,7 @@
         </property>
     </bean>
     
-    <tx:annotation-driven/> 
+    <tx:annotation-driven/>
 
     <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory"></property>
@@ -50,5 +50,7 @@
     <jdbc:embedded-database id="dataSource" type="DERBY" >
         <jdbc:script location="WEB-INF/sql/user.sql"/>
     </jdbc:embedded-database> 
+    
+    <bean class="net.paulgray.lmsrest.web.DefaultContextUserArgumentResolver"/>
     
 </beans>

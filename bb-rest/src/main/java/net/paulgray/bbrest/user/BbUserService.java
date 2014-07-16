@@ -32,4 +32,8 @@ public class BbUserService implements UserService {
         }
     }
 
+    public User getUserForUsername(String username) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

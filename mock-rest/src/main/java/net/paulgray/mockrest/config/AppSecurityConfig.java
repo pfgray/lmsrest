@@ -23,16 +23,15 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication().withUser("tom").password("123456").roles("USER");
-        auth.inMemoryAuthentication().withUser("bill").password("123456").roles("ADMIN");
-        auth.inMemoryAuthentication().withUser("james").password("123456").roles("SUPERADMIN");
+        auth.inMemoryAuthentication().withUser("gwashington").password("password").roles("USER");
+        auth.inMemoryAuthentication().withUser("jadams").password("password").roles("ADMIN");
+        auth.inMemoryAuthentication().withUser("tjefferson").password("password").roles("SUPERADMIN");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
         http.authorizeRequests()
-                .antMatchers("/" + LmsRestConstants.API_PREFIX + "/**").access("hasRole('ROLE_USER')")
+                .antMatchers("/" + LmsRestConstants.API_PREFIX + "/**").access("isAuthenticated()")
                 .and().formLogin();
     }
 
