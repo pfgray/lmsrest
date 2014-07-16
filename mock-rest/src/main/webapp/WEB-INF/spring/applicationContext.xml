@@ -16,17 +16,12 @@
     <!--
     <import resource="converter.xml"/>
     -->
-    <context:annotation-config/>
-  
-    <bean class="net.paulgray.mockrest.user.MockUserService"/>
     <!--
     <bean class="net.paulgray.mockrest.MockAnnouncementService"/>
     <bean class="net.paulgray.mockrest.MockDiscussionService"/>
     <bean class="net.paulgray.mockrest.MockAssignmentService"/>
     <bean class="net.paulgray.mockrest.MockCourseService"/>
     -->
-    
-    <mvc:annotation-driven />
     
     <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>

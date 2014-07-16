@@ -52,6 +52,7 @@
         </property>
         <property name="cacheSeconds" value="30" />
     </bean>
+    <!--
     <bean id="localeResolver" class="org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver"/>
     <bean id="restExceptionResolver" class="com.stormpath.spring.web.servlet.handler.RestExceptionHandler">
         <property name="order" value="100"></property>
@@ -71,5 +72,5 @@
             </bean>
         </property>
     </bean>
-    
+    -->
 </beans>
