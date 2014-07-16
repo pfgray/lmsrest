@@ -7,13 +7,13 @@ package net.paulgray.bbrest.mixins;
 
 import java.util.Set;
 import org.reflections.Reflections;
-import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
 /**
  *
  * @author pgray
  */
-public class MixinJacksonHttpMessageConverter extends MappingJacksonHttpMessageConverter {
+public class MixinJacksonHttpMessageConverter extends MappingJackson2HttpMessageConverter {
 
     public MixinJacksonHttpMessageConverter(String[] basePackages) {
         for (String pkg: basePackages){
@@ -23,7 +23,7 @@ public class MixinJacksonHttpMessageConverter extends MappingJacksonHttpMessageC
             for(Class<?> mixin : annotated){
                 AutoMixin am = mixin.getAnnotation(AutoMixin.class);
                 for(Class toMix : am.value()){
-                    this.getObjectMapper().getSerializationConfig().addMixInAnnotations(toMix, mixin);
+                    this.getObjectMapper().addMixInAnnotations(toMix, mixin);
                 }
             }
         }

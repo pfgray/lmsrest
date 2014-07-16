@@ -23,7 +23,7 @@ import blackboard.persist.Container;
 import blackboard.persist.DataType;
 import blackboard.persist.Id;
 import blackboard.platform.gradebook2.GradableItem;
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  *
