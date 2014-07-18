@@ -33,6 +33,8 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/" + LmsRestConstants.API_PREFIX + "/**").access("isAuthenticated()")
                 .and().formLogin();
+        http.authorizeRequests()
+                .antMatchers("/**").access("permitAll");
     }
 
 }
