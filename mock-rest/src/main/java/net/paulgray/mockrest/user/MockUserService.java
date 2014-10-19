@@ -34,7 +34,6 @@ public class MockUserService implements UserService {
 
     @Transactional
     public User getUserForUsername(String username) {
-        System.out.println("getting user with username: " + username);
         Criteria crit = sessionFactory.getCurrentSession().createCriteria(MockUser.class);
         crit.add(Restrictions.eq("username", username));
         return (MockUser) crit.uniqueResult();

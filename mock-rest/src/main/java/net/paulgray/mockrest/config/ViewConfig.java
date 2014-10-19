@@ -21,7 +21,6 @@ import org.springframework.web.servlet.view.JstlView;
 @EnableWebMvc
 @Configuration
 @ComponentScan("net.paulgray.*")
-@Import({AppSecurityConfig.class})
 @ImportResource("WEB-INF/spring/applicationContext.xml")
 public class ViewConfig {
 

@@ -5,11 +5,13 @@
  */
 package net.paulgray.mockrest.user;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import net.paulgray.lmsrest.user.User;
+import net.paulgray.mockrest.course.MockCourse;
+import net.paulgray.mockrest.course.MockEnrollment;
+
+import java.util.List;
 
 /**
  *
@@ -21,7 +23,7 @@ public class MockUser extends User {
 
     @Id
     @Column(name = "id")
-    protected String id;
+    protected Integer id;
     @Column(name = "username")
     protected String username;
     @Column(name = "first_name")
@@ -32,15 +34,21 @@ public class MockUser extends User {
     protected String mi;
     @Column(name = "encryptedPassword")
     protected String encryptedPassword;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "enrollments", joinColumns = {
+        @JoinColumn(name = "user_id", nullable = false, updatable = false)
+    })
+    protected List<MockCourse> courses;
     
     @Override
     public String getId() {
-        return id;
+        return id == null ? null : id.toString();
     }
 
     @Override
     public void setId(String id) {
-        this.id = id;
+        this.id = Integer.valueOf(id);
     }
 
     @Override
@@ -83,4 +91,11 @@ public class MockUser extends User {
         this.mi = mi;
     }
 
+    public List<MockCourse> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<MockCourse> courses) {
+        this.courses = courses;
+    }
 }

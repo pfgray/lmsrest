@@ -20,7 +20,7 @@
     <bean class="net.paulgray.mockrest.MockAnnouncementService"/>
     <bean class="net.paulgray.mockrest.MockDiscussionService"/>
     <bean class="net.paulgray.mockrest.MockAssignmentService"/>
-    <bean class="net.paulgray.mockrest.MockCourseService"/>
+    <bean class="net.paulgray.mockrest.course.MockCourseService"/>
     -->
     
     <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
@@ -36,6 +36,8 @@
         <property name="annotatedClasses">
             <list>
                 <value>net.paulgray.mockrest.user.MockUser</value>
+                <value>net.paulgray.mockrest.course.MockCourse</value>
+                <value>net.paulgray.mockrest.course.MockEnrollment</value>
             </list>
         </property>
     </bean>

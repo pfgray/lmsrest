@@ -27,5 +27,6 @@
    
     <!--these are our controllers-->
     <context:component-scan base-package="net.paulgray.lmsrest.user" />
+    <context:component-scan base-package="net.paulgray.lmsrest.course" />
 
 </beans>
